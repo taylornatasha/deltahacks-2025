@@ -2,13 +2,14 @@ import { Image, StyleSheet, Platform, ImageSourcePropType } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
-type PokeProps = {
+// dumb place to define
+export type PokeType = {
     name: string,
     imgPath: ImageSourcePropType,
     xp: number
 }
 
-export const PokemonGuy: React.FC<PokeProps> = ({name, imgPath, xp}) => {
+export const PokemonGuy: React.FC<PokeType> = ({name, imgPath, xp}) => {
     return (
         <ThemedView style={styles.outerContainer}>
             <ThemedView style={styles.innerContainer}>

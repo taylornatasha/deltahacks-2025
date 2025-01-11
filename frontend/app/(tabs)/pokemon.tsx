@@ -1,4 +1,5 @@
-import { StyleSheet, Image, Platform } from 'react-native';
+import { StyleSheet, Image, Platform, ImageSourcePropType } from 'react-native';
+import React, {useState, useEffect} from 'react';
 
 import { Collapsible } from '@/components/Collapsible';
 import { ExternalLink } from '@/components/ExternalLink';
@@ -8,7 +9,31 @@ import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { PokemonGuy } from '@/components/PokemonGuy';
 
+type PyPokeType = {
+    name: string,
+    xp: number,
+    pokemon: string,
+    habit: string
+} 
+
 export default function PokemonScreen() {
+
+    const [pokemen, setPokeman] = useState<PyPokeType[]>([]);
+
+    useEffect(() => {
+        const fetchPokemen = async () => {
+            try {
+                const response = await fetch("http://127.0.0.1:8000/");
+                const data : PyPokeType[] = await response.json();
+                setPokeman(data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchPokemen();
+    }, []);
+
   return (
     <div>
         <ParallaxScrollView
@@ -20,7 +45,10 @@ export default function PokemonScreen() {
             <ThemedText type="title">My Pokemen</ThemedText>
         </ThemedView>
         </ParallaxScrollView>
-        <PokemonGuy name="bob" imgPath={require('@/assets/images/pikachu.png')} xp={1} />
+        {pokemen.map((poke) => (
+            <PokemonGuy name={poke.name} imgPath={pokemonToImageMap[poke.pokemon]} xp={poke.xp} />
+        ))}
+        
         <PokemonGuy name="fred" imgPath={require('@/assets/images/slowbro.png')} xp={1} />
     </div>
   );
@@ -40,3 +68,8 @@ const styles = StyleSheet.create({
     gap: 8,
   }
 });
+
+const pokemonToImageMap: { [key: string] : ImageSourcePropType } = {
+    pikachu: require('@/assets/images/pikachu.png'),
+    slowbro: require('@/assets/images/slowbro.png')
+}
