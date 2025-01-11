@@ -1,4 +1,4 @@
-import {
+  import {
     StyleSheet,
     Image,
     Platform,
@@ -10,13 +10,11 @@ import {
   import { createStackNavigator } from '@react-navigation/stack';
   import { NavigationContainer, NavigationIndependentTree } from '@react-navigation/native';
   
-  import { Collapsible } from '@/components/Collapsible';
-  import { ExternalLink } from '@/components/ExternalLink';
   import ParallaxScrollView from '@/components/ParallaxScrollView';
   import { ThemedText } from '@/components/ThemedText';
   import { ThemedView } from '@/components/ThemedView';
-  import { IconSymbol } from '@/components/ui/IconSymbol';
-  import { PokemonGuy } from '@/components/PokemonGuy';
+  import { PokeHabit } from '@/components/PokemonGuy';
+  import { PostRequestComponent } from '@/components/TestPost';
   
   type PyPokeType = {
     name: string;
@@ -27,7 +25,7 @@ import {
   
   const Stack = createStackNavigator();
   
-  // Main screen displaying the Pokémon list
+  //pokemon screen displaying all pokemon
   function PokemonScreen({ navigation }: { navigation: any }) {
     const [pokemen, setPokeman] = useState<PyPokeType[]>([]);
   
@@ -55,9 +53,6 @@ import {
           />
         }
       >
-        {/* <ThemedView style={styles.titleContainer}>
-          <ThemedText type="title">My Pokemen</ThemedText>
-        </ThemedView> */}
         <View style={styles.pokemonContainer}>
           {pokemen.map((poke) => (
             <TouchableHighlight
@@ -66,20 +61,22 @@ import {
               underlayColor="#ddd"
             >
               <View style={styles.pokemonCard}>
-                <PokemonGuy
+                <PokeHabit
                   name={poke.name}
                   imgPath={pokemonToImageMap[poke.pokemon]}
                   xp={poke.xp}
+                  habit={poke.habit}
                 />
               </View>
             </TouchableHighlight>
           ))}
         </View>
+        <PostRequestComponent param={{habit: 'bonjour'}}/>
       </ParallaxScrollView>
     );
   }
   
-  // Details screen displaying more information about a Pokémon
+  // details screen displaying more information about habit
   function PokemonDetailsScreen({ route }: { route: any }) {
     const { pokemon } = route.params;
   
@@ -96,7 +93,7 @@ import {
     );
   }
   
-  // App component with navigation setup
+  // app component with navigation setup
   export default function App() {
     return (
         <NavigationIndependentTree>
@@ -126,14 +123,14 @@ import {
     },
     pokemonContainer: {
       flex: 1,
-      flexDirection: "row",
+      flexDirection: "column",
       flexWrap: "wrap",
       justifyContent: "space-around"
     },
     pokemonCard: {
-      width: 150,
+      width: '100%',
       height: 150,
-      margin: 8,
+      marginTop: 8,
       justifyContent: "center",
       alignItems: "center",
       borderRadius: 8,
