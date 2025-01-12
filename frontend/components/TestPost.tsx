@@ -6,9 +6,11 @@ import {
   View,
   Alert,
 } from 'react-native';
+import { PyPokeType } from '@/app/(tabs)/pokemon';
 
 type PostRequestComponentProps = {
-    param: { habit: string }; // Define the expected structure of param
+    onPostSuccess: () => void;
+    param: PyPokeType; // Define the expected structure of param
   };
 
 export function PostRequestComponent(param: PostRequestComponentProps) {
@@ -27,6 +29,7 @@ export function PostRequestComponent(param: PostRequestComponentProps) {
       }
 
       const data = await response.json();
+      param.onPostSuccess();
       Alert.alert('Success', `Response: ${JSON.stringify(data)}`);
     } catch (error: any) {
       Alert.alert('Error', `Failed to send POST request: ${error.message}`);
@@ -40,7 +43,7 @@ export function PostRequestComponent(param: PostRequestComponentProps) {
         underlayColor="#1e90ff"
         onPress={handlePress}
       >
-        <Text style={styles.buttonText}>Send POST Request</Text>
+        <Text style={styles.buttonText}>Track Habit</Text>
       </TouchableHighlight>
     </View>
   );
@@ -50,8 +53,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f8f9fa',
+    alignItems: 'center'
   },
   button: {
     backgroundColor: '#007bff',

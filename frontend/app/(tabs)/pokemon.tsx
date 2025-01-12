@@ -16,11 +16,11 @@
   import { PokeHabit } from '@/components/PokemonGuy';
   import { PostRequestComponent } from '@/components/TestPost';
   
-  type PyPokeType = {
-    name: string;
-    xp: number;
-    pokemon: string;
-    habit: string;
+  export type PyPokeType = {
+    name: string,
+    xp: number,
+    pokemon: string,
+    habit: string
   };
   
   const Stack = createStackNavigator();
@@ -28,9 +28,9 @@
   //pokemon screen displaying all pokemon
   function PokemonScreen({ navigation }: { navigation: any }) {
     const [pokemen, setPokeman] = useState<PyPokeType[]>([]);
+    const [refreshTrigger, setRefreshTrigger] = useState(false);
   
-    useEffect(() => {
-      const fetchPokemen = async () => {
+    const fetchPokemen = async () => {
         try {
           const response = await fetch("http://127.0.0.1:8000/");
           const data: PyPokeType[] = await response.json();
@@ -39,10 +39,16 @@
           console.error("Error fetching data:", error);
         }
       };
-  
+    
+    useEffect(() => {
       fetchPokemen();
-    }, []);
-  
+    }, [refreshTrigger]);
+
+    const refreshData = () => {
+        console.log("hi!!!!")
+        setRefreshTrigger((prev) => !prev); // Toggle the trigger
+    };
+    
     return (
       <ParallaxScrollView
         headerBackgroundColor={{ light: "#D0D0D0", dark: "#353636" }}
@@ -70,8 +76,9 @@
               </View>
             </TouchableHighlight>
           ))}
+          {/* this is just a test */}
+          <PostRequestComponent onPostSuccess={refreshData} param={{'name': 'fred', 'xp': 2, 'pokemon': 'pikachu', 'habit': 'spaghetti'}}/> 
         </View>
-        <PostRequestComponent param={{habit: 'bonjour'}}/>
       </ParallaxScrollView>
     );
   }
@@ -123,18 +130,24 @@
     },
     pokemonContainer: {
       flex: 1,
-      flexDirection: "column",
-      flexWrap: "wrap",
-      justifyContent: "space-around"
+      flexDirection: "column", // Ensure cards are stacked vertically
+      justifyContent: "flex-start", // Align cards to the top of the container
+      alignItems: "center", // Center cards horizontally
+      paddingVertical: 16,
     },
     pokemonCard: {
-      width: '100%',
-      height: 150,
-      marginTop: 8,
+      width: "90%", // Make the card width proportional to the screen width
+      height: 130,
+      marginVertical: 8, // Add vertical spacing between cards
       justifyContent: "center",
       alignItems: "center",
+      backgroundColor: "#f0f0f0", // Add background color for visibility
       borderRadius: 8,
       elevation: 3,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
     },
     detailsContainer: {
       flex: 1,
@@ -148,6 +161,7 @@
       marginBottom: 16,
     },
   });
+  
   
   const pokemonToImageMap: { [key: string]: ImageSourcePropType } = {
     pikachu: require('@/assets/images/pikachu.png'),

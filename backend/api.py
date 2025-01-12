@@ -1,14 +1,13 @@
 from flask import Flask, request, Response, jsonify
 from flask_cors import CORS
-import json
+from csvThings import write_habit, read_habits
 
 app = Flask(__name__)
 CORS(app)
 
 @app.route("/", methods=["GET"])
 def test():
-    return [{'name': 'bob', 'xp': 2, 'pokemon': 'pikachu', 'habit': 'spaghetti'}, 
-            {'name': 'fred', 'xp': 3, 'pokemon': 'slowbro', 'habit': 'meow'}]
+    return(read_habits())
 
 @app.route('/api', methods=['POST'])
 def handle_post_request():
@@ -16,14 +15,11 @@ def handle_post_request():
     if not data:
         return jsonify({"error": "No data provided"}), 400
     
-    habit = data.get('param', None).get('habit', None)
+    data = data.get('param', None)
 
-    print("yay! habit:", habit)
+    write_habit(data)
 
-    if habit:
-        return jsonify({"status": "success", "message_received": habit}), 200
-    else:
-        return jsonify({"error": "No 'message' key in the data"}), 400
+    return jsonify({"success": "probably good!"}), 200
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000)

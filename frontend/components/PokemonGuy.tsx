@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
         position: 'relative',
         margin: 20,
         backgroundColor: 'transparent',
-        borderRadius: 7
+        borderRadius: 7,
     },
     innerContainer: {
         height: 80,
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
         borderColor: 'green',
         borderWidth: 2,
         borderRadius: 10,
-        alignSelf: 'stretch'
+        // alignSelf: 'stretch'
     },
     habitInfo: {
         alignSelf: 'center',
