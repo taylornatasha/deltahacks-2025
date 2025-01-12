@@ -7,7 +7,7 @@ import {
   } from 'react-native';
   import React, { useState, useEffect } from 'react';
   import { createStackNavigator } from '@react-navigation/stack';
-  import { NavigationContainer } from '@react-navigation/native';
+  import { NavigationContainer, NavigationIndependentTree } from '@react-navigation/native';
   
   import ParallaxScrollView from '@/components/ParallaxScrollView';
   import { ThemedText } from '@/components/ThemedText';
@@ -184,20 +184,22 @@ import {
   
   export default function App() {
     return (
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="BATTLES"
-            component={BattleScreen}
-            options={{
-              headerStyle: { backgroundColor: '#6200ee' },
-              headerTintColor: '#fff',
-              headerTitleStyle: { fontWeight: 'bold' },
-            }}
-          />
-          <Stack.Screen name="Battle Details" component={BattleDetailScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
+        <NavigationIndependentTree>
+        <NavigationContainer>
+            <Stack.Navigator>
+            <Stack.Screen
+                name="BATTLES"
+                component={BattleScreen}
+                options={{
+                headerStyle: { backgroundColor: '#6200ee' },
+                headerTintColor: '#fff',
+                headerTitleStyle: { fontWeight: 'bold' },
+                }}
+            />
+            <Stack.Screen name="Battle Details" component={BattleDetailScreen} />
+            </Stack.Navigator>
+        </NavigationContainer>
+      </NavigationIndependentTree>
     );
   }
   
