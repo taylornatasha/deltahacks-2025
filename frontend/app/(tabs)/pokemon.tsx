@@ -17,6 +17,8 @@
   import { PostRequestUpdate } from '@/components/PostRequestComponent';
   import { CreateHabit } from '@/components/CreateHabit';
   import { PyPokeType } from '@/types/poke';
+
+  import { useAppContext } from '../context/AppContext';
   
   const Stack = createStackNavigator();
 
@@ -33,13 +35,15 @@
   }
   
   function PokemonScreen({ navigation }: { navigation: any }) {
+    const { uid, setUid, clearUid } = useAppContext();
     const [pokemen, setPokeman] = useState<PyPokeType[]>([]);
     const [refreshTrigger, setRefreshTrigger] = useState(false);
     const [validationStatuses, setValidationStatuses] = useState<{ [key: string]: boolean }>({});
   
     const fetchPokemen = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:8000/");
+        const response = await fetch(uid ? "http://127.0.0.1:8000/api/get" : "http://127.0.0.1:8000/api_user2/get");
+        console.log("response:", response)
         const data: PyPokeType[] = await response.json();
         setPokeman(data);
   
@@ -112,6 +116,7 @@
                     }}
                   />
                   <PostRequestUpdate
+                    user={{uid: uid}}
                     buttonText="TRACK!"
                     onPostSuccess={refreshData}
                     param={{
@@ -130,7 +135,7 @@
               </View>
             </TouchableHighlight>
           ))}
-          <CreateHabit onPostSuccess={refreshData} />
+          <CreateHabit user={{uid: uid}} onPostSuccess={refreshData} />
         </View>
       </ParallaxScrollView>
     );
@@ -149,6 +154,8 @@
         <ThemedText type="title">{pokemon.name}</ThemedText>
         <ThemedText>XP: {pokemon.xp}</ThemedText>
         <ThemedText>Habit: {pokemon.habit}</ThemedText>
+        <ThemedText>Start date: {(new Date(pokemon.startDate).toDateString())}</ThemedText>
+        <ThemedText>Goal: {pokemon.timesPer} time(s) per {pokemon.period}</ThemedText>
       </ThemedView>
     );
   }
@@ -169,7 +176,7 @@
                                 fontWeight: "bold", // Style for the header title
                             },
                         }} />
-                    <Stack.Screen name="PokemonDetails" component={PokemonDetailsScreen} />
+                    <Stack.Screen name="Pokemon Details" component={PokemonDetailsScreen} />
                 </Stack.Navigator>
             </NavigationContainer>
         </NavigationIndependentTree>

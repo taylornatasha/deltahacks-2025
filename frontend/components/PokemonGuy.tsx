@@ -8,7 +8,7 @@ export const PokeHabit: React.FC<PokeType> = ({imgPath, info}) => {
     return (
         <ThemedView style={styles.habitContainer}>
             <PokemonGuy 
-                info={{name: info.name, xp: info.xp, pokemon: info.pokemon, habit: info.habit, startDate: info.startDate, timesPer: info.timesPer, period: info.period}}  
+                info={{ ...info }}  
                 imgPath={imgPath}  />
             <ThemedText type="defaultSemiBold" style={styles.habitInfo}>
                 {info.habit + "\n" + info.timesPer} time(s) per {info.period.toLowerCase()}

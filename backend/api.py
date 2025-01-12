@@ -10,7 +10,7 @@ f = open("habits.json", "w")
 f.truncate()
 f.close()
 
-@app.route("/", methods=["GET"])
+@app.route("/api/get", methods=["GET"])
 def handle_get_request():
     habits = read_habits()
     return(habits)
