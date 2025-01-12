@@ -14,7 +14,7 @@
   import { ThemedText } from '@/components/ThemedText';
   import { ThemedView } from '@/components/ThemedView';
   import { PokeHabit } from '@/components/PokemonGuy';
-  import { PostRequestOverwrite } from '@/components/PostRequestComponent';
+  import { PostRequestUpdate } from '@/components/PostRequestComponent';
   import { CreateHabit } from '@/components/CreateHabit';
   import { PyPokeType } from '@/types/poke';
   
@@ -67,8 +67,8 @@
                   xp={poke.xp}
                   habit={poke.habit}
                 />
-                <PostRequestOverwrite buttonText="TRACK!" onPostSuccess={refreshData}
-                    param={{'name': poke.name, 'xp': +poke.xp + 1, 'pokemon': poke.pokemon, 'habit': poke.habit, 'startDate': poke.startDate, 'timesPer': poke.timesPer, 'period': poke.period}} />
+                <PostRequestUpdate buttonText="TRACK!" onPostSuccess={refreshData}
+                    param={{'name': poke.name, 'xp': poke.xp, 'pokemon': poke.pokemon, 'habit': poke.habit, 'startDate': poke.startDate, 'timesPer': poke.timesPer, 'period': poke.period}} />
               </View>
             </TouchableHighlight>
           ))}

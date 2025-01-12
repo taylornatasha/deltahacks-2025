@@ -8,8 +8,20 @@ import {
 } from 'react-native';
 import { PostRequestTypes } from '@/types/poke';
 
-export const PostRequest = async (param: PostRequestTypes) => {
+const PostRequest = async (param: PostRequestTypes) => {
     const response = await fetch('http://127.0.0.1:8000/api', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(param),
+      });
+    return response;
+}
+
+//too lazy to add parameter
+const PostRequestXP = async (param: PostRequestTypes) => {
+    const response = await fetch('http://127.0.0.1:8000/api/increase_xp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -52,7 +64,7 @@ export function PostRequestOverwrite(param: PostRequestTypes) {
 export function PostRequestUpdate(param: PostRequestTypes) {
     const handlePress = async () => {
       try {
-        const response = await PostRequest(param);
+        const response = await PostRequestXP(param);
   
         if (!response.ok) {
           throw new Error('Network response was not ok');

@@ -114,7 +114,7 @@ export const CreateHabit : React.FC<CreateHabitProps> = (param: CreateHabitProps
                                     buttonText="HATCH!"
                                     param={{
                                         'name': nickname, 
-                                        'xp': 2, 
+                                        'xp': 1, 
                                         'pokemon': pkmnName, 
                                         'habit': habitDesc,
                                         'startDate' : (new Date).toISOString(),

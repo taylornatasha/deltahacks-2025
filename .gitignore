@@ -1,2 +1,3 @@
 .vscode/
-.backend/habits.csv
+backend/habits.json
+backend/__pycache__/
