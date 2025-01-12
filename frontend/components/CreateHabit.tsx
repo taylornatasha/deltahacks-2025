@@ -7,11 +7,12 @@ import { Habit } from '../types/habit';
 import { PostRequestOverwrite } from './PostRequestComponent';
 import { pokemens } from '@/constants/PokemenCatalog';
 import { PokeData } from '@/types/poke';
+import { User } from '@/types/userdata'
 //import Confetti from 'react-native-simple-confetti';
 
 type CreateHabitProps = {
     onPostSuccess: () => void;
-
+    user: User;
 }
 
 export const CreateHabit : React.FC<CreateHabitProps> = (param: CreateHabitProps) => {
@@ -110,6 +111,7 @@ export const CreateHabit : React.FC<CreateHabitProps> = (param: CreateHabitProps
                                     onChangeText={setNickname}
                                 />
                                 <PostRequestOverwrite 
+                                    user={param.user}
                                     onPostSuccess={refreshAndToggleVisibility} 
                                     buttonText="START TRACKING"
                                     param={{
@@ -121,6 +123,154 @@ export const CreateHabit : React.FC<CreateHabitProps> = (param: CreateHabitProps
                                         'timesPer': parseInt(timesPer),
                                         'period': period,
                                         'lastDoneTime': ''
+                                    }} 
+                                />
+                                {/* <Confetti count={50}/> */}
+                            </ThemedView>
+                        ) : (
+                            <ThemedView>
+                            <TextInput style={styles.input}
+                                placeholder="Go to the gym"
+                                placeholderTextColor="grey"
+                                value={habitDesc}
+                                onChangeText={setHabitDesc}
+                            />
+                            <ThemedView style={styles.inlineContainer}>
+                                <TextInput
+                                    style={styles.inlineInput}
+                                    keyboardType="numeric"
+                                    value={timesPer}
+                                    onChangeText={setTimesPer}
+                                />
+                                <ThemedText>     time(s) every     </ThemedText>
+                                <Picker
+                                    selectedValue={period}
+                                    onValueChange={(itemValue: string) => setPeriod(itemValue)}
+                                >
+                                <Picker.Item label="Day" value="Day" />
+                                <Picker.Item label="Week" value="Week" />
+                                </Picker>
+                            </ThemedView>
+                            <Button color="#6200ee" title="Hatch!" onPress={handleHatch} disabled={hatchStarted} />
+                    <ThemedView style={{height: 10}} />
+                    <Button color="#6200ee" title="Cancel" onPress={toggleFormVisibility} disabled={hatchStarted} />
+                            </ThemedView>
+                        )
+                    }</ThemedView>
+                </ThemedView>
+                </ThemedView>
+            </Modal>
+        </ThemedView>
+    );
+}
+
+export const CreateGroupHabit : React.FC<CreateHabitProps> = (param: CreateHabitProps) => {
+    const [isFormVisible, setFormVisible] = useState(false);
+    const [habitDesc, setHabitDesc] = useState("Go to the gym");
+    const [timesPer, setTimesPer] = useState("1");
+    const [period, setPeriod] = useState("Day");
+
+    const [hatchStarted, setHatchStart] = useState(false);
+    const [pkmnName, setPkmnName] = useState("");
+    const [pkmnImg, setPkmnImg] = useState<ImageSourcePropType>();
+    const [nickname, setNickname] = useState("");
+
+    const toggleFormVisibility = () => setFormVisible(!isFormVisible);
+
+    const handleHatch = () => {
+        setHatchStart(true);
+
+        // select random pkmn
+        const randIdx = Math.floor(Math.random() * pokemens.length);
+        const pkmn = { ...pokemens[randIdx] };
+        setPkmnName(pkmn.pokemonID);
+        setPkmnImg(pkmn.imgPath);
+        setNickname(pkmn.pokemonID);
+    };
+
+    const shakeAnim = useRef(new Animated.Value(0)).current;
+    const shakeAmt = 7;
+
+    useEffect(() => {
+        // Create shaking animation
+        const shake = Animated.loop(
+          Animated.sequence([
+            Animated.timing(shakeAnim, {
+              toValue: shakeAmt, // Move right
+              duration: 100,
+              useNativeDriver: true,
+            }),
+            Animated.timing(shakeAnim, {
+              toValue: -shakeAmt, // Move left
+              duration: 100,
+              useNativeDriver: true,
+            }),
+            Animated.timing(shakeAnim, {
+              toValue: 0, // Back to center
+              duration: 100,
+              useNativeDriver: true,
+            }),
+          ])
+        );
+        shake.start(); // Start the animation
+      }, [shakeAnim]);
+
+      const refreshAndToggleVisibility = () => {
+        param.onPostSuccess();
+        setHatchStart(false);
+        toggleFormVisibility();
+      }
+
+    return (
+        <ThemedView style={styles.outerContainer}>
+            <Button color="#6200ee" title="Add New Group Habit" onPress={toggleFormVisibility} />
+
+            <Modal 
+                visible={isFormVisible}
+                animationType="slide"
+                transparent={true}
+                onRequestClose={toggleFormVisibility}
+            >
+                <ThemedView style={styles.hatchModal}>
+                <ThemedView style={styles.innerContainer}>
+                    <ThemedText style={styles.hatchTitle}>Add New Habit</ThemedText>
+                    <ThemedView style={{height: "50%", margin: 20,}}>
+                        <>{ hatchStarted ? (
+                            <Image 
+                                source={pkmnImg} 
+                                style={styles.pkmn}
+                            />
+                        ) : (
+                            <Animated.Image
+                                source={require('@/assets/images/egg.png')}
+                                style={[styles.egg, { transform: [{ translateX: shakeAnim }] }]}
+                                resizeMode="contain"
+                            />
+                        )}</>
+                    </ThemedView>
+                    <ThemedView>{
+                        hatchStarted ? (
+                            <ThemedView style={styles.centered}>
+                                <ThemedText>It's a <ThemedText style={{ fontWeight: 'bold' }}>{pkmnName}</ThemedText>!</ThemedText>
+                                <ThemedText>Give it a name:</ThemedText>
+                                <TextInput style={styles.input} 
+                                    placeholder={pkmnName}
+                                    placeholderTextColor="grey"
+                                    value={nickname}
+                                    onChangeText={setNickname}
+                                />
+                                <PostRequestOverwrite 
+                                    onPostSuccess={refreshAndToggleVisibility} 
+                                    buttonText="START TRACKING"
+                                    user={param.user}
+                                    param={{
+                                        'name': nickname, 
+                                        'xp': 0, 
+                                        'pokemon': pkmnName, 
+                                        'habit': habitDesc,
+                                        'startDate' : (new Date).toISOString(),
+                                        'timesPer': parseInt(timesPer),
+                                        'period': period
                                     }} 
                                 />
                                 {/* <Confetti count={50}/> */}

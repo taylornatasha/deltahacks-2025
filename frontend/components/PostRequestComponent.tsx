@@ -9,7 +9,7 @@ import {
 import { PostRequestTypes } from '@/types/poke';
 
 const PostRequest = async (param: PostRequestTypes) => {
-    const response = await fetch('http://127.0.0.1:8000/api', {
+    const response = await fetch(param.user.uid ? 'http://127.0.0.1:8000/api' : 'http://127.0.0.1:8000/api_user2', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -21,7 +21,7 @@ const PostRequest = async (param: PostRequestTypes) => {
 
 //too lazy to add parameter
 const PostRequestXP = async (param: PostRequestTypes) => {
-    const response = await fetch('http://127.0.0.1:8000/api/increase_xp', {
+    const response = await fetch(param.user.uid ? 'http://127.0.0.1:8000/api/increase_xp' : 'http://127.0.0.1:8000/api_user2/increase_xp/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

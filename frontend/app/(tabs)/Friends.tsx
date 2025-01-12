@@ -3,7 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer, NavigationIndependentTree } from "@react-navigation/native";
 import { ThemedText } from "@/components/ThemedText";
-import { CreateHabit } from "@/components/CreateHabit";
+import { CreateGroupHabit } from "@/components/CreateHabit";
 
 const Stack = createStackNavigator();
 const FriendContext = createContext<any>(null);
@@ -52,7 +52,7 @@ const FindFriendForm = ({ navigation }: { navigation: any }) => {
 };
 
 // "Friend Added" Screen
-const FriendAddedScreen = ({ navigation }: { navigation: any }) => {
+const FriendAddedScreen = ({ navigation }: { navigation: any }, uid: number) => {
   const { friends } = useContext(FriendContext);
 
   // Get the latest friend's name
@@ -67,7 +67,7 @@ const FriendAddedScreen = ({ navigation }: { navigation: any }) => {
       {/* should modify to be group challenge... */}
       <View style={styles.buttons}>
         <View style={styles.button}>
-            <CreateHabit onPostSuccess={() => {}} />
+            <CreateGroupHabit user={{uid: uid}} onPostSuccess={() => {}} />
         </View>
         <View style={styles.button}>
             <Button
