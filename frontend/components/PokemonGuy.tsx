@@ -37,26 +37,29 @@ const PokemonGuy: React.FC<PokeType> = ({name, imgPath, xp}) => {
 const styles = StyleSheet.create({
     outerContainer: {
         height: 110,
-        width: 110,
-        padding: 15,
+        width: '100%',
+        padding: 2,
         flex: 1,
         position: 'relative',
-        margin: 20,
+        margin: 5,
         backgroundColor: 'transparent',
         borderRadius: 7,
+        alignSelf: 'center'
     },
     innerContainer: {
-        height: 80,
-        width: 80,
-        flex: 1,
+        height: '100%',
+        maxWidth: '80%',
+        // flex: 1,
         position: 'relative',
         backgroundColor: 'green',
-        borderRadius: 7
+        borderRadius: 7,
+        borderWidth: 2,
+        borderColor: '#444444'
     },
     pokeman: {
-      height: 50,
-      width: 50,
-      top: 2,
+      height: 60,
+      width: 60,
+      top: 10,
       alignSelf: 'center',
       position: 'absolute'
     },
@@ -68,7 +71,7 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     xp: {
-        left: 80,
+        right: 20,
         top: 0,
         padding: 3,
         height: 35,
@@ -77,22 +80,20 @@ const styles = StyleSheet.create({
         position: 'absolute',
         backgroundColor: 'green',
         borderWidth: 3,
+        borderColor: '#444444',
         borderRadius: 100
     },
     habitContainer: {
         flex: 1,
         flexDirection: 'row',
         position: 'relative',
-        borderColor: 'green',
-        borderWidth: 2,
-        borderRadius: 10,
-        // alignSelf: 'stretch'
+        borderRadius: 10
     },
     habitInfo: {
         alignSelf: 'center',
         textAlign: 'left',
         right: 0,
         position: 'relative',
-        width: 180
+        width: '30%'
     }
   });

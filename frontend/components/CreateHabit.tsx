@@ -4,7 +4,7 @@ import { Picker } from '@react-native-picker/picker';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Habit } from '../types/habit';
-import { PostRequestComponent } from './PostRequestComponent';
+import { PostRequestOverwrite } from './PostRequestComponent';
 import { pokemens } from '@/constants/PokemenCatalog';
 import { PokeData } from '@/types/poke';
 //import Confetti from 'react-native-simple-confetti';
@@ -109,7 +109,7 @@ export const CreateHabit : React.FC<CreateHabitProps> = (param: CreateHabitProps
                                     value={nickname}
                                     onChangeText={setNickname}
                                 />
-                                <PostRequestComponent 
+                                <PostRequestOverwrite 
                                     onPostSuccess={refreshAndToggleVisibility} 
                                     buttonText="HATCH!"
                                     param={{

@@ -14,7 +14,7 @@
   import { ThemedText } from '@/components/ThemedText';
   import { ThemedView } from '@/components/ThemedView';
   import { PokeHabit } from '@/components/PokemonGuy';
-  import { PostRequestComponent } from '@/components/PostRequestComponent';
+  import { PostRequestOverwrite } from '@/components/PostRequestComponent';
   import { CreateHabit } from '@/components/CreateHabit';
   import { PyPokeType } from '@/types/poke';
   
@@ -67,7 +67,8 @@
                   xp={poke.xp}
                   habit={poke.habit}
                 />
-                <PostRequestComponent buttonText="TRACK!" onPostSuccess={refreshData} param={{'name': poke.name, 'xp': +poke.xp + 1, 'pokemon': poke.pokemon, 'habit': poke.habit, 'startDate': poke.startDate, 'timesPer': poke.timesPer, 'period': poke.period}} />
+                <PostRequestOverwrite buttonText="TRACK!" onPostSuccess={refreshData}
+                    param={{'name': poke.name, 'xp': +poke.xp + 1, 'pokemon': poke.pokemon, 'habit': poke.habit, 'startDate': poke.startDate, 'timesPer': poke.timesPer, 'period': poke.period}} />
               </View>
             </TouchableHighlight>
           ))}
@@ -126,22 +127,26 @@
       flex: 1,
       flexDirection: "column", // Ensure cards are stacked vertically
       justifyContent: "flex-start", // Align cards to the top of the container
-      alignItems: "center", // Center cards horizontally
       paddingVertical: 16,
+      width: '100%',
+      position: 'relative'
     },
     pokemonCard: {
-      width: "90%", // Make the card width proportional to the screen width
-      height: 130,
+      width: "100%",
       marginVertical: 8, // Add vertical spacing between cards
+      marginHorizontal: 0,
       justifyContent: "center",
-      alignItems: "center",
-      backgroundColor: "#f0f0f0", // Add background color for visibility
       borderRadius: 8,
       elevation: 3,
       shadowColor: "#000",
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.1,
       shadowRadius: 4,
+      flex: 1,
+      flexDirection: 'row',
+      position: 'relative',
+      borderWidth: 2,
+      borderColor: '#444444'
     },
     detailsContainer: {
       flex: 1,
@@ -150,15 +155,16 @@
       padding: 16,
     },
     pokemonImage: {
-      width: 150,
+      width: '100%',
       height: 150,
       marginBottom: 16,
-    },
+      borderWidth: 2,
+      borderColor: 'blue'
+    }
   });
-  
-  
+
   const pokemonToImageMap: { [key: string]: ImageSourcePropType } = {
-    pikachu: require('@/assets/images/pikachu.png'),
-    slowbro: require('@/assets/images/slowbro.png'),
+    Nicholasmon: require("@/assets/images/pkmn_santa.png"),
+    Deermon: require("@/assets/images/pkmn_reindeer.png"),
+    Jinglemon: require("@/assets/images/pkmn_elf.png")
   };
-  

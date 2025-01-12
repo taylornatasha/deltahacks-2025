@@ -19,7 +19,7 @@ export const PostRequest = async (param: PostRequestTypes) => {
     return response;
 }
 
-export function PostRequestComponent(param: PostRequestTypes) {
+export function PostRequestOverwrite(param: PostRequestTypes) {
   const handlePress = async () => {
     try {
       const response = await PostRequest(param);
@@ -49,16 +49,47 @@ export function PostRequestComponent(param: PostRequestTypes) {
   );
 }
 
+export function PostRequestUpdate(param: PostRequestTypes) {
+    const handlePress = async () => {
+      try {
+        const response = await PostRequest(param);
+  
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+  
+        const data = await response.json();
+        param.onPostSuccess();
+        Alert.alert('Success', `Response: ${JSON.stringify(data)}`);
+      } catch (error: any) {
+        Alert.alert('Error', `Failed to send POST request: ${error.message}`);
+      }
+    };
+  
+    return (
+      <View style={styles.container}>
+        <TouchableHighlight
+          style={styles.button}
+          underlayColor="#1e90ff"
+          onPress={handlePress}
+        >
+          <Text style={styles.buttonText}>{param.buttonText}</Text>
+        </TouchableHighlight>
+      </View>
+    );
+  }
+
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    // width: '10%',
+    position: 'relative'
   },
   button: {
     backgroundColor: '#007bff',
     padding: 15,
     borderRadius: 8,
+    width: '100%'
   },
   buttonText: {
     color: '#ffffff',
