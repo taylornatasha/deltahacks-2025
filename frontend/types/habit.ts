@@ -1,7 +1,6 @@
 export type HabitInterval = {
-    hours: number,
-    days: number,
-    weeks: number
+    timesPer: number,
+    period: "Day" | "Week"
 }
 
 export interface Habit {
