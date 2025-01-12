@@ -20,6 +20,7 @@
   import { PyPokeType } from '@/types/poke';
 
   import { useAppContext } from '../context/AppContext';
+import { pokemens } from '@/constants/PokemenCatalog';
   
   const Stack = createStackNavigator();
 
@@ -126,7 +127,7 @@
               <View style={styles.outerCard}>
                 <View style={styles.pokemonCard}>
                   <PokeHabit
-                    imgPath={pokemonToImageMap[poke.pokemon]}
+                    imgPath={pokemens.find((p) => p.pokemonID === poke.pokemon)?.imgPath}
                     info={{ ...poke }}
                   />
                   <View style={{alignItems: 'center'}}>
@@ -160,7 +161,7 @@
     return (
       <ThemedView style={styles.detailsContainer}>
         <Image
-          source={pokemonToImageMap[pokemon.pokemon]}
+          source={pokemens.find((p) => p.pokemonID === pokemon.pokemon)?.imgPath}
           style={styles.pokemonImage}
         />
         <ThemedText type="title">{pokemon.name}</ThemedText>
@@ -280,11 +281,6 @@
     }
   });
 
-  const pokemonToImageMap: { [key: string]: ImageSourcePropType } = {
-    Nicholasmon: require("@/assets/images/pkmn_santa.png"),
-    Deermon: require("@/assets/images/pkmn_reindeer.png"),
-    Jinglemon: require("@/assets/images/pkmn_elf.png")
-  };
 
   const periodToTimeMap: { [key: string]: number } = {
     Day: 24 * 60 * 60 * 1000,
