@@ -23,6 +23,7 @@ import { CreateBattle } from '@/components/CreateBattle';
 
 import { useAppContext } from '../context/AppContext';
 import { pokemens } from '@/constants/PokemenCatalog';
+import { PokemonGuy } from '@/components/PokemonGuy';
 
 const Stack = createStackNavigator();
 
@@ -32,8 +33,8 @@ function BattleScreen({ navigation }: { navigation: any }) {
     id: 0,
     p1: 0,
     p2: 1,
-    p1PkmnName: 'khskdjfd',
-    p2PkmnName: 'dsflkjsdf',
+    p1PkmnName: 'Jinglemon',
+    p2PkmnName: 'Nicholasmon',
     p1Health: 3,
     p2Health: 3,
     startDate: ''
@@ -50,6 +51,7 @@ function BattleScreen({ navigation }: { navigation: any }) {
       console.log("response:", response)
       const data: PyPokeType[] = await response.json();
       setPokeman(data);
+     // console.log(data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -60,7 +62,7 @@ function BattleScreen({ navigation }: { navigation: any }) {
       const response = await fetch(uid ? "http://127.0.0.1:8000/api/get" : "http://127.0.0.1:8000/api_user2/get");
       console.log("response:", response)
       const data: Battle[] = await response.json();
-      setBattles(data);
+      //setBattles(data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -88,17 +90,43 @@ function BattleScreen({ navigation }: { navigation: any }) {
     >
       <ThemedText style={styles.title}>My Battles</ThemedText>
       <View style={styles.pokemonContainer}>
-        {battles.map((battle: Battle) => (
-          <TouchableHighlight
-            key={battle.id}
-            onPress={() => navigation.navigate("Battle Details", { battle })}
-            underlayColor="#ddd"
-          >
-            <ThemedText>Hi</ThemedText>
-          </TouchableHighlight>
-        ))}
+        {battles.map((battle: Battle) => {
+          console.log(battle);
+          const pkmn1 = pokemen.find((p) => p.name === battle.p1PkmnName);
+          const pkmn2 = pokemen.find((p) => p.name === battle.p2PkmnName);
+          if (!pkmn1 || !pkmn2) {
+            return null;
+          }
+          
+          const p1path = pokemens.find((p) => p.pokemonID === pkmn1.pokemon)?.imgPath ?? pokemens[0].imgPath;
+          const p2path = pokemens.find((p) => p.pokemonID === pkmn2.pokemon)?.imgPath ?? pokemens[0].imgPath;
+
+          return (
+            <TouchableHighlight
+              key={battle.id}
+              onPress={() => navigation.navigate("Battle Details", { battle })}
+              underlayColor="#ddd"
+            >
+              <View style={styles.outerCard}>
+                <View style={styles.leftContainer}>
+                  <PokemonGuy
+                    info={ pkmn1 }
+                    imgPath={p1path}
+                  />
+                </View>
+                <ThemedText style={styles.vsText}>VS.</ThemedText>
+                <View style={styles.rightContainer}>
+                <PokemonGuy
+                    info={ pkmn2 }
+                    imgPath={p2path}
+                  />
+                </View>
+              </View>
+            </TouchableHighlight>
+          );
+        })}
         <ThemedText>{pokemen.length}</ThemedText>
-        {<CreateBattle user={{ uid }} onPostSuccess={() => { }} />}
+        <CreateBattle user={{ uid }} onPostSuccess={() => { }} />
       </View>
     </ParallaxScrollView>
   );
@@ -219,7 +247,22 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingBottom: 8,
     justifyContent: "center"
-  }
+  },
+  leftContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "flex-start",
+  },
+  rightContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "flex-end",
+  },
+  vsText: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "black",
+  },
 });
 
 const pokemonToImageMap: { [key: string]: ImageSourcePropType } = {

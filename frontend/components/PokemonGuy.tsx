@@ -18,7 +18,7 @@ export const PokeHabit: React.FC<PokeType> = ({imgPath, info}) => {
     )
 }
 
-const PokemonGuy: React.FC<PokeType> = ({imgPath, info}) => {
+export const PokemonGuy: React.FC<PokeType> = ({imgPath, info}) => {
     return (
         <ThemedView style={styles.outerContainer}>
 
