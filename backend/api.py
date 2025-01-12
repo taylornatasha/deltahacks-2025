@@ -5,8 +5,13 @@ from csvThings import write_habit, read_habits
 app = Flask(__name__)
 CORS(app)
 
+# reset csv on startup lol
+f = open("habits.csv", "w")
+f.truncate()
+f.close()
+
 @app.route("/", methods=["GET"])
-def test():
+def handle_get_request():
     return(read_habits())
 
 @app.route('/api', methods=['POST'])

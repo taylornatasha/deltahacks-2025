@@ -13,16 +13,21 @@ type PostRequestComponentProps = {
     param: PyPokeType; // Define the expected structure of param
   };
 
-export function PostRequestComponent(param: PostRequestComponentProps) {
-  const handlePress = async () => {
-    try {
-      const response = await fetch('http://127.0.0.1:8000/api', {
+export const PostRequest = async (param: PostRequestComponentProps) => {
+    const response = await fetch('http://127.0.0.1:8000/api', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(param),
       });
+    return response;
+}
+
+export function PostRequestComponent(param: PostRequestComponentProps) {
+  const handlePress = async () => {
+    try {
+      const response = await PostRequest(param);
 
       if (!response.ok) {
         throw new Error('Network response was not ok');

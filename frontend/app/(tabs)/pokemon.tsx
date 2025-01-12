@@ -14,7 +14,7 @@
   import { ThemedText } from '@/components/ThemedText';
   import { ThemedView } from '@/components/ThemedView';
   import { PokeHabit } from '@/components/PokemonGuy';
-  import { PostRequestComponent } from '@/components/TestPost';
+  import { PostRequestComponent, PostRequest } from '@/components/TestPost';
   
   export type PyPokeType = {
     name: string,
@@ -45,7 +45,6 @@
     }, [refreshTrigger]);
 
     const refreshData = () => {
-        console.log("hi!!!!")
         setRefreshTrigger((prev) => !prev); // Toggle the trigger
     };
     
