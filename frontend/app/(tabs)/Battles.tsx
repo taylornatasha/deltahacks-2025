@@ -124,13 +124,13 @@ function BattleScreen({ navigation }: { navigation: any }) {
               onPress={() => navigation.navigate("Battle Details", { battle })}
               underlayColor="#ddd"
             >
-              <View style={styles.outerCard}>
-                <ImageBackground
+              <ImageBackground
                   source={require('@/assets/images/fire_bg.png')}
-                  style={styles.firebg}
-                  imageStyle={styles.firebgimage}
+                  style={{flex: 1, width: "100%", height: "100%" }}
+                  imageStyle={{opacity: 0.3,}}
+                  resizeMode="cover"
                 >
-                </ImageBackground>
+              <View style={styles.outerCard}>
                 <View style={styles.leftContainer}>
                   <ThemedView style={styles.pkmnInnerContainer}>
                     <ImageBackground
@@ -173,6 +173,7 @@ function BattleScreen({ navigation }: { navigation: any }) {
                   </View>
                 </View>
               </View>
+              </ImageBackground>
             </TouchableHighlight>
           );
         })}
@@ -331,6 +332,7 @@ const styles = StyleSheet.create({
     borderColor: '#444444',
     overflow: "hidden",
   },
+
 });
 
 const pokemonToImageMap: { [key: string]: ImageSourcePropType } = {
