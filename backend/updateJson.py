@@ -4,10 +4,7 @@ from pathlib import Path
 # Define the keys for habit data
 habit_keys = ['name', 'xp', 'pokemon', 'habit', 'startDate', 'timesPer', 'period', 'lastDoneTime']
 
-# Path to the JSON file
-json_file = 'habits.json'
-
-def read_habits():
+def read_habits(json_file):
     """
     Read all habits from the JSON file.
     Returns:
@@ -25,7 +22,7 @@ def read_habits():
             return []
     return habits
 
-def write_habit(habit):
+def write_habit(habit, json_file):
     if not all(key in habit for key in habit_keys):
         raise ValueError(f"Habit must contain the following keys: {habit_keys}")
 
@@ -44,7 +41,7 @@ def write_habit(habit):
     with open(json_file, 'w', encoding='utf-8') as file:
         json.dump(habits, file, indent=4)
 
-def increase_xp(habit_name):
+def increase_xp(habit_name, json_file):
     """
     Increase the XP for a specific habit by 1.
     Args:

@@ -8,7 +8,7 @@ import { useAppContext } from '../context/AppContext';
 
 export default function HomeScreen() {
     const { uid, setUid, clearUid } = useAppContext();
-    setUid(1);
+    setUid(0);
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#FFFFFF', dark: '#FFFFFF' }}
