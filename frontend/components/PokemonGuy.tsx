@@ -1,13 +1,7 @@
 import { Image, StyleSheet, Platform, ImageSourcePropType } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-
-// dumb place to define
-type PokeType = {
-    name: string,
-    imgPath: ImageSourcePropType,
-    xp: number
-}
+import { PokeType } from '@/types/poke';
 
 // give type !
 export const PokeHabit: any = (pokemon: any) => {

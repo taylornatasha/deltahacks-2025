@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, Button, TextInput, Modal, Animated } from 'react-native';
+import { StyleSheet, Button, TextInput, Modal, Animated, Image, ImageSourcePropType } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Habit } from '../types/habit';
 import { PostRequestComponent } from './PostRequestComponent';
+import { pokemens } from '@/constants/PokemenCatalog';
+import { PokeData } from '@/types/poke';
 
 type CreateHabitProps = {
     onPostSuccess: () => void;
@@ -18,12 +20,20 @@ export const CreateHabit : React.FC<CreateHabitProps> = (param: CreateHabitProps
     const [period, setPeriod] = useState("Day");
 
     const [hatchStarted, setHatchStart] = useState(false);
-    const [pkname, setPkname] = useState('');
+    const [pkmnName, setPkmnName] = useState("");
+    const [pkmnImg, setPkmnImg] = useState<ImageSourcePropType>();
+    const [nickname, setNickname] = useState("");
 
     const toggleFormVisibility = () => setFormVisible(!isFormVisible);
 
-    const handleSubmit = () => {
+    const handleHatch = () => {
         setHatchStart(true);
+
+        // select random pkmn
+        const randIdx = Math.floor(Math.random() * pokemens.length);
+        const pkmn = { ...pokemens[randIdx] };
+        setPkmnName(pkmn.pokemonID);
+        setPkmnImg(pkmn.imgPath);
     };
 
     const shakeAnim = useRef(new Animated.Value(0)).current;
@@ -71,17 +81,33 @@ export const CreateHabit : React.FC<CreateHabitProps> = (param: CreateHabitProps
                 <ThemedView style={styles.hatchModal}>
                 <ThemedView style={styles.innerContainer}>
                     <ThemedText style={styles.hatchTitle}>Add New Habit</ThemedText>
-                    <ThemedView style={{height: "50%", margin: 40,}}>
-                    <Animated.Image
-                        source={require('@/assets/images/egg.png')}
-                        style={[styles.egg, { transform: [{ translateX: shakeAnim }] }]}
-                        resizeMode="contain"
-                    />
+                    <ThemedView style={{height: "50%", margin: 20,}}>
+                        <>{ hatchStarted ? (
+                            <Image 
+                                source={pkmnImg} 
+                                style={styles.pkmn}
+                            />
+                        ) : (
+                            <Animated.Image
+                                source={require('@/assets/images/egg.png')}
+                                style={[styles.egg, { transform: [{ translateX: shakeAnim }] }]}
+                                resizeMode="contain"
+                            />
+                        )}</>
                     </ThemedView>
                     <ThemedView>{
                         hatchStarted ? (
-                            <ThemedView>
-                                
+                            <ThemedView style={styles.centered}>
+                                <ThemedText>It's a <ThemedText style={{ fontWeight: 'bold' }}>{pkmnName}</ThemedText>!</ThemedText>
+                                <PostRequestComponent 
+                                    onPostSuccess={refreshAndToggleVisibility} 
+                                    param={{
+                                        'name': nickname, 
+                                        'xp': 2, 
+                                        'pokemon': pkmnName, 
+                                        'habit': habitDesc
+                                    }} 
+                                />
                             </ThemedView>
                         ) : (
                             <ThemedView>
@@ -107,12 +133,12 @@ export const CreateHabit : React.FC<CreateHabitProps> = (param: CreateHabitProps
                                 <Picker.Item label="Week" value="Week" />
                                 </Picker>
                             </ThemedView>
+                            <Button title="Hatch!" onPress={handleHatch} disabled={hatchStarted} />
+                    <ThemedView style={{height: 10}} />
+                    <Button title="Cancel" onPress={toggleFormVisibility} disabled={hatchStarted} />
                             </ThemedView>
                         )
                     }</ThemedView>
-                    <PostRequestComponent onPostSuccess={refreshAndToggleVisibility} param={{'name': 'fred', 'xp': 2, 'pokemon': 'pikachu', 'habit': 'spaghetti'}} />
-                    <ThemedView style={{height: 10}} />
-                    <Button title="Cancel" onPress={toggleFormVisibility} disabled={hatchStarted} />
                 </ThemedView>
                 </ThemedView>
             </Modal>
@@ -163,6 +189,13 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%'
     },
+    pkmn: {
+        width: '100%',
+        height: '100%',
+        borderWidth: 2,
+        borderColor: "#ccc",
+        borderRadius: 10,
+    },
     inlineContainer: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -174,5 +207,9 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         marginBottom: 10,
         paddingLeft: 8,
-    }
+    },
+    centered: {
+        justifyContent: 'center', // vertically
+        alignItems: 'center', // horizontally
+    },
   });

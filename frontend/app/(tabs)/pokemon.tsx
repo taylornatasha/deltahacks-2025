@@ -16,13 +16,7 @@
   import { PokeHabit } from '@/components/PokemonGuy';
   import { PostRequestComponent } from '@/components/PostRequestComponent';
   import { CreateHabit } from '@/components/CreateHabit';
-  
-  export type PyPokeType = {
-    name: string,
-    xp: number,
-    pokemon: string,
-    habit: string
-  };
+  import { PyPokeType } from '@/types/poke';
   
   const Stack = createStackNavigator();
   
