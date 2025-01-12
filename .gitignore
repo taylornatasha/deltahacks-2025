@@ -1,3 +1,5 @@
 .vscode/
 backend/habits.json
+backend/habits_user2.json
+backend/battles.json
 backend/__pycache__/

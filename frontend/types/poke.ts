@@ -1,5 +1,6 @@
 import { ImageSourcePropType } from "react-native"
 import { User } from '@/types/userdata'
+import { Battle } from "./battle"
 
 export type PokeType = {
     imgPath: ImageSourcePropType,
@@ -26,6 +27,14 @@ export type PokeData = {
 export type PostRequestTypes = {
     onPostSuccess: () => void;
     param: PyPokeType; // Define the expected structure of param
+    buttonText: string;
+    user: User;
+    disabled?: boolean;
+  };
+
+  export type PostRequestBattleType = {
+    onPostSuccess: () => void;
+    param: Battle; // Define the expected structure of param
     buttonText: string;
     user: User;
     disabled?: boolean;

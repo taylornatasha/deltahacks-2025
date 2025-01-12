@@ -135,14 +135,7 @@
                     buttonText="DONE!"
                     onPostSuccess={refreshData}
                     param={{
-                      name: poke.name,
-                      xp: poke.xp,
-                      pokemon: poke.pokemon,
-                      habit: poke.habit,
-                      startDate: poke.startDate,
-                      timesPer: poke.timesPer,
-                      period: poke.period,
-                      lastDoneTime: (new Date).toISOString()
+                      ...poke
                     }}
                     disabled={calculateRemainingDones(poke) === 0}
                   />

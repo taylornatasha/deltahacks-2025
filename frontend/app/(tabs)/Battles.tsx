@@ -62,7 +62,7 @@ function BattleScreen({ navigation }: { navigation: any }) {
       const response = await fetch(uid ? "http://127.0.0.1:8000/api/get" : "http://127.0.0.1:8000/api_user2/get");
       console.log("response:", response)
       const data: Battle[] = await response.json();
-      //setBattles(data);
+      setBattles(data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -126,21 +126,26 @@ function BattleScreen({ navigation }: { navigation: any }) {
           );
         })}
         <ThemedText>{pokemen.length}</ThemedText>
-        <CreateBattle user={{ uid }} onPostSuccess={() => { }} />
+        <CreateBattle user={{ uid }} onPostSuccess={refreshData} battle={sampleBattle} />
       </View>
     </ParallaxScrollView>
   );
 }
 
 function BattleDetailScreen({ route }: { route: any }) {
-  const { battle } = route.params;
-
-  return (
-    <ThemedView style={styles.detailsContainer}>
-      <ThemedText type="title">Battle</ThemedText>
-    </ThemedView>
-  );
-}
+    const { battle } = route.params;
+  
+    return (
+      <ThemedView style={styles.detailsContainer}>
+        <ThemedText type="title">Battle Details</ThemedText>
+        <ThemedText>{`Battle ID: ${battle.id}`}</ThemedText>
+        <ThemedText>{`Player 1 Pokémon: ${battle.p1PkmnName} (Health: ${battle.p1Health})`}</ThemedText>
+        <ThemedText>{`Player 2 Pokémon: ${battle.p2PkmnName} (Health: ${battle.p2Health})`}</ThemedText>
+        <ThemedText>{`Start Date: ${battle.startDate}`}</ThemedText>
+      </ThemedView>
+    );
+  }
+  
 
 // app component with navigation setup
 export default function App() {

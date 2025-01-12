@@ -6,10 +6,21 @@ import {
   View,
   Alert,
 } from 'react-native';
-import { PostRequestTypes } from '@/types/poke';
+import { PostRequestTypes, PostRequestBattleType } from '@/types/poke';
 
 const PostRequest = async (param: PostRequestTypes) => {
     const response = await fetch(param.user.uid ? 'http://127.0.0.1:8000/api/add' : 'http://127.0.0.1:8000/api_user2/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(param),
+      });
+    return response;
+}
+
+const PostRequestBattle = async (param: PostRequestBattleType) => {
+    const response = await fetch('http://127.0.0.1:8000/battles/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -60,6 +71,36 @@ export function PostRequestOverwrite(param: PostRequestTypes) {
     </View>
   );
 }
+
+export function PostRequestOverwriteBattle(param: PostRequestBattleType) {
+    const handlePress = async () => {
+      try {
+        const response = await PostRequestBattle(param);
+  
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+  
+        const data = await response.json();
+        param.onPostSuccess();
+        Alert.alert('Success', `Response: ${JSON.stringify(data)}`);
+      } catch (error: any) {
+        Alert.alert('Error', `Failed to send POST request: ${error.message}`);
+      }
+    };
+  
+    return (
+      <View style={styles.container}>
+        <TouchableHighlight
+          style={styles.button}
+          underlayColor="#1e90ff"
+          onPress={handlePress}
+        >
+          <Text style={styles.buttonText}>{param.buttonText}</Text>
+        </TouchableHighlight>
+      </View>
+    );
+  }
 
 export function PostRequestUpdate(param: PostRequestTypes) {
     const handlePress = async () => {

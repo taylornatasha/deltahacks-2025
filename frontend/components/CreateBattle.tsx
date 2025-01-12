@@ -4,15 +4,19 @@ import { Picker } from '@react-native-picker/picker';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Habit } from '../types/habit';
-import { PostRequestOverwrite } from './PostRequestComponent';
+import { PostRequestOverwriteBattle } from './PostRequestComponent';
 import { pokemens } from '@/constants/PokemenCatalog';
 import { PokeData } from '@/types/poke';
 import { User } from '@/types/userdata'
+import { Battle } from '@/types/battle';
+import { PyPokeType } from '@/types/poke';
+import { useAppContext } from '@/app/context/AppContext';
 //import Confetti from 'react-native-simple-confetti';
 
 type CreateBattleProps = {
     onPostSuccess: () => void;
     user: User;
+    battle: Battle;
 }
 
 export const CreateBattle : React.FC<CreateBattleProps> = (param: CreateBattleProps) => {
@@ -24,6 +28,49 @@ export const CreateBattle : React.FC<CreateBattleProps> = (param: CreateBattlePr
         param.onPostSuccess();
         toggleFormVisibility();
     }
+
+    const { uid, setUid, clearUid } = useAppContext();
+        const [battle, setBattle] = useState<Battle[]>([]);
+        const [refreshTrigger, setRefreshTrigger] = useState(false);
+        const [validationStatuses, setValidationStatuses] = useState<{ [key: string]: boolean }>({});
+      
+        const calculateRemainingDones = (pkmn: PyPokeType) => {
+          return pkmn.timesPer - (pkmn.xp % (pkmn.timesPer + 1));
+          // if (pkmn.lastDoneTime === "") {
+          //   return pkmn.timesPer;
+          // }
+          // const currentTime = new Date;
+          // const lastTime = new Date(pkmn.lastDoneTime);
+          // const elapsed = lastTime.getTime() - currentTime.getTime();
+    
+          // const intervalInMs = pkmn.period === "Day" 
+          //   ? pkmn.timesPer * 24 * 60 * 60 * 1000
+          //   : pkmn.timesPer * 7 *  24 * 60 * 60 * 1000;
+    
+          // const elapsedIntervals = Math.floor(elapsed / intervalInMs);
+          // const remainingDones = elapsedIntervals * pkmn.timesPer;
+    
+          // return remainingDones;
+        };
+    
+        const fetchBattle = async () => {
+          try {
+            const response = await fetch(uid ? "http://127.0.0.1:8000/api/get" : "http://127.0.0.1:8000/api_user2/get");
+            console.log("response:", response)
+            const data: Battle[] = await response.json();
+            setBattle(data);
+          } catch (error) {
+            console.error("Error fetching data:", error);
+          }
+        };
+      
+        useEffect(() => {
+          fetchBattle();
+        }, [refreshTrigger]);
+      
+        const refreshData = () => {
+          setRefreshTrigger((prev) => !prev); // Toggle the trigger
+        };
 
     return (
         <ThemedView style={styles.outerContainer}>
@@ -38,13 +85,20 @@ export const CreateBattle : React.FC<CreateBattleProps> = (param: CreateBattlePr
                 <ThemedView style={styles.hatchModal}>
                 <ThemedView style={styles.innerContainer}>
                     <ThemedText style={styles.hatchTitle}>Start Battle</ThemedText>
-                    {/* <PostRequestOverwrite 
+                    <PostRequestOverwriteBattle 
                         user={param.user}
                         onPostSuccess={refreshAndToggleVisibility} 
                         buttonText="SEND BATTLE REQUEST"
-                        param={{
-
-                        }} /> */}
+                        param={{ ...param.battle
+                            // id: 1,
+                            // p1: 0,
+                            // p2: 1,
+                            // p1PkmnName: 'joe',
+                            // p2PkmnName: 'bob',
+                            // p1Health: 10,
+                            // p2Health: 10,
+                            // startDate: (new Date).toISOString()
+                        }} />
                 </ThemedView>
                 </ThemedView>
             </Modal>

@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     message: {
         fontSize: 30,
         fontWeight: "bold",
-        color: "#6200ee",
+        color: "#fff",
         marginTop: 40
     },
     submessage: {
