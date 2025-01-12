@@ -101,6 +101,7 @@ export const CreateHabit : React.FC<CreateHabitProps> = (param: CreateHabitProps
                                 <ThemedText>It's a <ThemedText style={{ fontWeight: 'bold' }}>{pkmnName}</ThemedText>!</ThemedText>
                                 <PostRequestComponent 
                                     onPostSuccess={refreshAndToggleVisibility} 
+                                    buttonText="HATCH!"
                                     param={{
                                         'name': nickname, 
                                         'xp': 2, 
