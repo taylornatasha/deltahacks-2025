@@ -1,4 +1,4 @@
-import {
+  import {
     StyleSheet,
     Image,
     Platform,
@@ -10,29 +10,27 @@ import {
   import { createStackNavigator } from '@react-navigation/stack';
   import { NavigationContainer, NavigationIndependentTree } from '@react-navigation/native';
   
-  import { Collapsible } from '@/components/Collapsible';
-  import { ExternalLink } from '@/components/ExternalLink';
   import ParallaxScrollView from '@/components/ParallaxScrollView';
   import { ThemedText } from '@/components/ThemedText';
   import { ThemedView } from '@/components/ThemedView';
-  import { IconSymbol } from '@/components/ui/IconSymbol';
-  import { PokemonGuy } from '@/components/PokemonGuy';
+  import { PokeHabit } from '@/components/PokemonGuy';
+  import { PostRequestComponent, PostRequest } from '@/components/TestPost';
   
-  type PyPokeType = {
-    name: string;
-    xp: number;
-    pokemon: string;
-    habit: string;
+  export type PyPokeType = {
+    name: string,
+    xp: number,
+    pokemon: string,
+    habit: string
   };
   
   const Stack = createStackNavigator();
   
-  // Main screen displaying the Pokémon list
+  //pokemon screen displaying all pokemon
   function PokemonScreen({ navigation }: { navigation: any }) {
     const [pokemen, setPokeman] = useState<PyPokeType[]>([]);
+    const [refreshTrigger, setRefreshTrigger] = useState(false);
   
-    useEffect(() => {
-      const fetchPokemen = async () => {
+    const fetchPokemen = async () => {
         try {
           const response = await fetch("http://127.0.0.1:8000/");
           const data: PyPokeType[] = await response.json();
@@ -41,10 +39,15 @@ import {
           console.error("Error fetching data:", error);
         }
       };
-  
+    
+    useEffect(() => {
       fetchPokemen();
-    }, []);
-  
+    }, [refreshTrigger]);
+
+    const refreshData = () => {
+        setRefreshTrigger((prev) => !prev); // Toggle the trigger
+    };
+    
     return (
       <ParallaxScrollView
         headerBackgroundColor={{ light: "#D0D0D0", dark: "#353636" }}
@@ -55,9 +58,6 @@ import {
           />
         }
       >
-        {/* <ThemedView style={styles.titleContainer}>
-          <ThemedText type="title">My Pokemen</ThemedText>
-        </ThemedView> */}
         <View style={styles.pokemonContainer}>
           {pokemen.map((poke) => (
             <TouchableHighlight
@@ -66,20 +66,23 @@ import {
               underlayColor="#ddd"
             >
               <View style={styles.pokemonCard}>
-                <PokemonGuy
+                <PokeHabit
                   name={poke.name}
                   imgPath={pokemonToImageMap[poke.pokemon]}
                   xp={poke.xp}
+                  habit={poke.habit}
                 />
               </View>
             </TouchableHighlight>
           ))}
+          {/* this is just a test */}
+          <PostRequestComponent onPostSuccess={refreshData} param={{'name': 'fred', 'xp': 2, 'pokemon': 'pikachu', 'habit': 'spaghetti'}}/> 
         </View>
       </ParallaxScrollView>
     );
   }
   
-  // Details screen displaying more information about a Pokémon
+  // details screen displaying more information about habit
   function PokemonDetailsScreen({ route }: { route: any }) {
     const { pokemon } = route.params;
   
@@ -96,7 +99,7 @@ import {
     );
   }
   
-  // App component with navigation setup
+  // app component with navigation setup
   export default function App() {
     return (
         <NavigationIndependentTree>
@@ -126,18 +129,24 @@ import {
     },
     pokemonContainer: {
       flex: 1,
-      flexDirection: "row",
-      flexWrap: "wrap",
-      justifyContent: "space-around"
+      flexDirection: "column", // Ensure cards are stacked vertically
+      justifyContent: "flex-start", // Align cards to the top of the container
+      alignItems: "center", // Center cards horizontally
+      paddingVertical: 16,
     },
     pokemonCard: {
-      width: 150,
-      height: 150,
-      margin: 8,
+      width: "90%", // Make the card width proportional to the screen width
+      height: 130,
+      marginVertical: 8, // Add vertical spacing between cards
       justifyContent: "center",
       alignItems: "center",
+      backgroundColor: "#f0f0f0", // Add background color for visibility
       borderRadius: 8,
       elevation: 3,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
     },
     detailsContainer: {
       flex: 1,
@@ -151,6 +160,7 @@ import {
       marginBottom: 16,
     },
   });
+  
   
   const pokemonToImageMap: { [key: string]: ImageSourcePropType } = {
     pikachu: require('@/assets/images/pikachu.png'),

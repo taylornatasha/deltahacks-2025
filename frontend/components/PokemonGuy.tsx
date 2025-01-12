@@ -3,13 +3,25 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
 // dumb place to define
-export type PokeType = {
+type PokeType = {
     name: string,
     imgPath: ImageSourcePropType,
     xp: number
 }
 
-export const PokemonGuy: React.FC<PokeType> = ({name, imgPath, xp}) => {
+// give type !
+export const PokeHabit: any = (pokemon: any) => {
+    return (
+        <ThemedView style={styles.habitContainer}>
+            <PokemonGuy name={pokemon.name} imgPath={pokemon.imgPath} xp={pokemon.xp} />
+            <ThemedText type="defaultSemiBold" style={styles.habitInfo}>
+                {pokemon.habit} {"\n"}hi
+            </ThemedText>
+        </ThemedView>
+    )
+}
+
+const PokemonGuy: React.FC<PokeType> = ({name, imgPath, xp}) => {
     return (
         <ThemedView style={styles.outerContainer}>
             <ThemedView style={styles.innerContainer}>
@@ -37,7 +49,7 @@ const styles = StyleSheet.create({
         position: 'relative',
         margin: 20,
         backgroundColor: 'transparent',
-        borderRadius: 7
+        borderRadius: 7,
     },
     innerContainer: {
         height: 80,
@@ -62,7 +74,7 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     xp: {
-        right: 0,
+        left: 80,
         top: 0,
         padding: 3,
         height: 35,
@@ -72,5 +84,21 @@ const styles = StyleSheet.create({
         backgroundColor: 'green',
         borderWidth: 3,
         borderRadius: 100
+    },
+    habitContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        position: 'relative',
+        borderColor: 'green',
+        borderWidth: 2,
+        borderRadius: 10,
+        // alignSelf: 'stretch'
+    },
+    habitInfo: {
+        alignSelf: 'center',
+        textAlign: 'left',
+        right: 0,
+        position: 'relative',
+        width: 180
     }
   });
