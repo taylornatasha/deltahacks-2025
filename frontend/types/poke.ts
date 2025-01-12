@@ -19,7 +19,8 @@ export type PyPokeType = {
 
 export type PokeData = {
     pokemonID: string,
-    imgPath: ImageSourcePropType
+    imgPath: ImageSourcePropType,
+    description?: string
 }
 
 export type PostRequestTypes = {
