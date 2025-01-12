@@ -127,7 +127,7 @@ import { pokemens } from '@/constants/PokemenCatalog';
               <View style={styles.outerCard}>
                 <View style={styles.pokemonCard}>
                   <PokeHabit
-                    imgPath={pokemens.find((p) => p.pokemonID === poke.pokemon)?.imgPath}
+                    imgPath={pokemens.find((p) => p.pokemonID === poke.pokemon)?.imgPath ?? pokemens[0].imgPath}
                     info={{ ...poke }}
                   />
                   <View style={{alignItems: 'center'}}>
