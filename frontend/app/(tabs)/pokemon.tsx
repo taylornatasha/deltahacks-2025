@@ -5,6 +5,7 @@
     ImageSourcePropType,
     TouchableHighlight,
     View,
+    InteractionManager,
   } from 'react-native';
   import React, { useState, useEffect } from 'react';
   import { createStackNavigator } from '@react-navigation/stack';
@@ -37,6 +38,25 @@
     const [refreshTrigger, setRefreshTrigger] = useState(false);
     const [validationStatuses, setValidationStatuses] = useState<{ [key: string]: boolean }>({});
   
+    const calculateRemainingDones = (pkmn: PyPokeType) => {
+      return pkmn.timesPer - (pkmn.xp % (pkmn.timesPer + 1));
+      // if (pkmn.lastDoneTime === "") {
+      //   return pkmn.timesPer;
+      // }
+      // const currentTime = new Date;
+      // const lastTime = new Date(pkmn.lastDoneTime);
+      // const elapsed = lastTime.getTime() - currentTime.getTime();
+
+      // const intervalInMs = pkmn.period === "Day" 
+      //   ? pkmn.timesPer * 24 * 60 * 60 * 1000
+      //   : pkmn.timesPer * 7 *  24 * 60 * 60 * 1000;
+
+      // const elapsedIntervals = Math.floor(elapsed / intervalInMs);
+      // const remainingDones = elapsedIntervals * pkmn.timesPer;
+
+      // return remainingDones;
+    };
+
     const fetchPokemen = async () => {
       try {
         const response = await fetch("http://127.0.0.1:8000/");
@@ -89,7 +109,9 @@
             style={styles.headerImage}
           />
         }
+        noPadding={true}
       >
+        <ThemedText style={styles.title}>My Pokeemamn</ThemedText>
         <View style={styles.pokemonContainer}>
           {pokemen.map((poke) => (
             <TouchableHighlight
@@ -101,18 +123,11 @@
                 <View style={styles.pokemonCard}>
                   <PokeHabit
                     imgPath={pokemonToImageMap[poke.pokemon]}
-                    info={{
-                      name: poke.name,
-                      xp: poke.xp,
-                      habit: poke.habit,
-                      pokemon: poke.pokemon,
-                      startDate: poke.startDate,
-                      timesPer: poke.timesPer,
-                      period: poke.period,
-                    }}
+                    info={{ ...poke }}
                   />
+                  <View style={{alignItems: 'center'}}>
                   <PostRequestUpdate
-                    buttonText="TRACK!"
+                    buttonText="DONE!"
                     onPostSuccess={refreshData}
                     param={{
                       name: poke.name,
@@ -122,8 +137,12 @@
                       startDate: poke.startDate,
                       timesPer: poke.timesPer,
                       period: poke.period,
+                      lastDoneTime: (new Date).toISOString()
                     }}
+                    disabled={calculateRemainingDones(poke) === 0}
                   />
+                  <ThemedText>x{calculateRemainingDones(poke)}</ThemedText>
+                  </View>
                 </View>
                 {/* Display valid/invalid based on validationStatuses */}
                 <View style={!validationStatuses[poke.name] ? styles.valid : styles.invalid}></View>
@@ -169,7 +188,7 @@
                                 fontWeight: "bold", // Style for the header title
                             },
                         }} />
-                    <Stack.Screen name="PokemonDetails" component={PokemonDetailsScreen} />
+                    <Stack.Screen name="Pokemon Details" component={PokemonDetailsScreen} />
                 </Stack.Navigator>
             </NavigationContainer>
         </NavigationIndependentTree>
@@ -194,13 +213,13 @@
       flex: 1,
       flexDirection: "column", // Ensure cards are stacked vertically
       justifyContent: "flex-start", // Align cards to the top of the container
-      paddingVertical: 16,
+      paddingBottom: 16,
       width: '100%',
-      position: 'relative'
+      position: 'relative',
     },
     pokemonCard: {
         width: "100%",
-        marginVertical: 8,
+        //marginVertical: 8,
         marginHorizontal: 0,
         justifyContent: "space-between", // Distribute space vertically
         alignItems: "center", // Center elements horizontally
@@ -210,16 +229,22 @@
         shadowOpacity: 0.1,
         shadowRadius: 4,
         flex: 1,
-        flexDirection: "row", // Stack elements vertically,
+        flexDirection: "row",
         flexWrap: "wrap",
         position: "relative",
-        padding: 8, // Adjust padding for better spacing
+        padding: 8,
     },
     detailsContainer: {
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
       padding: 16
+    },
+    title: {
+      fontSize: 24,
+      fontWeight: "bold",
+      textAlign: "center",
+      margin:5,
     },
     pokemonImage: {
       width: '100%',
@@ -250,7 +275,7 @@
         borderWidth: 2,
         borderColor: "#444444",
         borderRadius: 8,
-        marginBottom: 8,
+        paddingBottom: 8,
         justifyContent: "center"
     }
   });

@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 
 # Define the keys for habit data
-habit_keys = ['name', 'xp', 'pokemon', 'habit', 'startDate', 'timesPer', 'period']
+habit_keys = ['name', 'xp', 'pokemon', 'habit', 'startDate', 'timesPer', 'period', 'lastDoneTime']
 
 # Path to the JSON file
 json_file = 'habits.json'

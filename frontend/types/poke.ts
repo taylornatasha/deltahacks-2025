@@ -12,7 +12,8 @@ export type PyPokeType = {
     habit: string,
     startDate: string,
     timesPer: number,
-    period: string
+    period: string,
+    lastDoneTime: string
   };
 
 export type PokeData = {
@@ -24,4 +25,5 @@ export type PostRequestTypes = {
     onPostSuccess: () => void;
     param: PyPokeType; // Define the expected structure of param
     buttonText: string;
+    disabled?: boolean;
   };
