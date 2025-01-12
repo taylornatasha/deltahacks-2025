@@ -1,0 +1,21 @@
+[
+    {
+        "name": "Tooth Fairy",
+        "xp": 5,
+        "pokemon": "Jinglemon",
+        "habit": "Floss",
+        "startDate": "2025-01-12T13:53:16.897Z",
+        "timesPer": 2,
+        "period": "Day"
+    },
+    {
+        "name": "Gym Buddy",
+        "xp": 0,
+        "pokemon": "Nicholasmon",
+        "habit": "Go to the gym",
+        "startDate": "2025-01-12T13:58:52.988Z",
+        "timesPer": 3,
+        "period": "Week",
+        "lastDoneTime": ""
+    }
+]
