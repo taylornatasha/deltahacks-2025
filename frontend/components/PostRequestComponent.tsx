@@ -81,9 +81,10 @@ export function PostRequestUpdate(param: PostRequestTypes) {
     return (
       <View style={styles.container}>
         <TouchableHighlight
-          style={styles.button}
-          underlayColor="#1e90ff"
+          style={param.disabled ? styles.disabledButton : styles.button}
+          underlayColor={"#1e90ff"}
           onPress={handlePress}
+          disabled={param.disabled}
         >
           <Text style={styles.buttonText}>{param.buttonText}</Text>
         </TouchableHighlight>
@@ -99,6 +100,13 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#6200ee',
+    paddingVertical: 15,
+    paddingHorizontal: 7,
+    borderRadius: 8,
+    width: '100%'
+  },
+  disabledButton: {
+    backgroundColor: '#A9A9A9',
     paddingVertical: 15,
     paddingHorizontal: 7,
     borderRadius: 8,
