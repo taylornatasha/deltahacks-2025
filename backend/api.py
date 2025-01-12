@@ -14,7 +14,7 @@ f = open("habits_user2.json", "w")
 f.truncate()
 f.close()
 
-f = open("battle.json", "w")
+f = open("battles.json", "w")
 f.truncate()
 f.close()
 

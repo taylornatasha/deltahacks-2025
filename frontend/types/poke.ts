@@ -36,6 +36,4 @@ export type PostRequestTypes = {
     onPostSuccess: () => void;
     param: Battle; // Define the expected structure of param
     buttonText: string;
-    user: User;
-    disabled?: boolean;
   };

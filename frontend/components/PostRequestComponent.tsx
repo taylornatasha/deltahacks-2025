@@ -19,7 +19,7 @@ const PostRequest = async (param: PostRequestTypes) => {
     return response;
 }
 
-const PostRequestBattle = async (param: PostRequestBattleType) => {
+export const PostRequestBattle = async (param: PostRequestBattleType) => {
     const response = await fetch('http://127.0.0.1:8000/battles/add', {
         method: 'POST',
         headers: {

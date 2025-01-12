@@ -15,8 +15,6 @@ import { useAppContext } from '@/app/context/AppContext';
 
 type CreateBattleProps = {
     onPostSuccess: () => void;
-    user: User;
-    battle: Battle;
 }
 
 export const CreateBattle : React.FC<CreateBattleProps> = (param: CreateBattleProps) => {
@@ -52,25 +50,6 @@ export const CreateBattle : React.FC<CreateBattleProps> = (param: CreateBattlePr
     
           // return remainingDones;
         };
-    
-        const fetchBattle = async () => {
-          try {
-            const response = await fetch(uid ? "http://127.0.0.1:8000/api/get" : "http://127.0.0.1:8000/api_user2/get");
-            console.log("response:", response)
-            const data: Battle[] = await response.json();
-            setBattle(data);
-          } catch (error) {
-            console.error("Error fetching data:", error);
-          }
-        };
-      
-        useEffect(() => {
-          fetchBattle();
-        }, [refreshTrigger]);
-      
-        const refreshData = () => {
-          setRefreshTrigger((prev) => !prev); // Toggle the trigger
-        };
 
     return (
         <ThemedView style={styles.outerContainer}>
@@ -86,18 +65,17 @@ export const CreateBattle : React.FC<CreateBattleProps> = (param: CreateBattlePr
                 <ThemedView style={styles.innerContainer}>
                     <ThemedText style={styles.hatchTitle}>Start Battle</ThemedText>
                     <PostRequestOverwriteBattle 
-                        user={param.user}
                         onPostSuccess={refreshAndToggleVisibility} 
                         buttonText="SEND BATTLE REQUEST"
-                        param={{ ...param.battle
-                            // id: 1,
-                            // p1: 0,
-                            // p2: 1,
-                            // p1PkmnName: 'joe',
-                            // p2PkmnName: 'bob',
-                            // p1Health: 10,
-                            // p2Health: 10,
-                            // startDate: (new Date).toISOString()
+                        param={{
+                            id: 1,
+                            p1: 0,
+                            p2: 1,
+                            p1PkmnName: 'joe',
+                            p2PkmnName: 'bob',
+                            p1Health: 10,
+                            p2Health: 10,
+                            startDate: (new Date).toISOString()
                         }} />
                 </ThemedView>
                 </ThemedView>

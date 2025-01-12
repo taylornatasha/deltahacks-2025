@@ -16,7 +16,7 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { PokeHabit } from '@/components/PokemonGuy';
-import { PostRequestUpdate } from '@/components/PostRequestComponent';
+import { PostRequestBattle } from '@/components/PostRequestComponent';
 import { CreateHabit } from '@/components/CreateHabit';
 import { PyPokeType } from '@/types/poke';
 import { Battle } from '@/types/battle';
@@ -30,156 +30,87 @@ const Stack = createStackNavigator();
 
 
 function BattleScreen({ navigation }: { navigation: any }) {
-  const sampleBattle: Battle = {
-    id: 0,
-    p1: 0,
-    p2: 1,
-    p1PkmnName: 'Jinglemon',
-    p2PkmnName: 'Nicholasmon',
-    p1Health: 3,
-    p2Health: 3,
-    startDate: ''
-  }
+    const [battles, setBattles] = useState<Battle[]>([]);
+    const [refreshTrigger, setRefreshTrigger] = useState(false);
 
-  const renderHealthCircles = (health: number) => {
-    const circles = [];
-    for (let i = 0; i < 3; i++) {
-      circles.push(
-        <View
-          key={i}
-          style={[
-            styles.healthCircle,
-            { backgroundColor: i < health ? "green" : "red" },
-          ]}
-        />
-      );
-    }
-    return circles;
-  };
+    const fetchBattle = async () => {
+              try {
+                const response = await fetch("http://127.0.0.1:8000/battles/get");
+                console.log("response:", response)
+                const data: Battle[] = await response.json();
+                setBattles(data);
+              } catch (error) {
+                console.error("Error fetching data:", error);
+              }
+            };
+          
+            useEffect(() => {
+              fetchBattle();
+            }, [refreshTrigger]);
+          
+            const refreshData = () => {
+              setRefreshTrigger((prev) => !prev); // Toggle the trigger
+            };
 
-  const { uid, setUid, clearUid } = useAppContext();
-  const [pokemen, setPokeman] = useState<PyPokeType[]>([]);
-  const [battles, setBattles] = useState<Battle[]>([sampleBattle]);
-  const [refreshTrigger, setRefreshTrigger] = useState(false);
-
-  const fetchPokemen = async () => {
-    try {
-      const response = await fetch(uid ? "http://127.0.0.1:8000/api/get" : "http://127.0.0.1:8000/api_user2/get");
-      console.log("response:", response)
-      const data: PyPokeType[] = await response.json();
-      setPokeman(data);
-      // console.log(data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  const fetchBattles = async () => {
-    try {
-      const response = await fetch(uid ? "http://127.0.0.1:8000/api/get" : "http://127.0.0.1:8000/api_user2/get");
-      console.log("response:", response)
-      const data: Battle[] = await response.json();
-      setBattles(data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchBattles();
-    fetchPokemen();
-  }, [refreshTrigger]);
-
-  const refreshData = () => {
-    setRefreshTrigger((prev) => !prev); // Toggle the trigger
-  };
-
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: "#D0D0D0", dark: "#353636" }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/battle.png')}
-          style={styles.headerImage}
-        />
+    const renderHealthCircles = (health: number) => {
+      const circles = [];
+      for (let i = 0; i < 3; i++) {
+        circles.push(
+          <View
+            key={i}
+            style={[
+              styles.healthCircle,
+              { backgroundColor: i < health ? "green" : "red" },
+            ]}
+          />
+        );
       }
-      noPadding={true}
-    >
-      <ThemedText style={styles.title}>My Battles</ThemedText>
-      <View style={styles.pokemonContainer}>
-        {battles.map((battle: Battle) => {
-          console.log(battle);
-          const pkmn1 = pokemen.find((p) => p.name === battle.p1PkmnName);
-          const pkmn2 = pokemen.find((p) => p.name === battle.p2PkmnName);
-          if (!pkmn1 || !pkmn2) {
-            return null;
-          }
-
-          const p1path = pokemens.find((p) => p.pokemonID === pkmn1.pokemon)?.imgPath ?? pokemens[0].imgPath;
-          const p2path = pokemens.find((p) => p.pokemonID === pkmn2.pokemon)?.imgPath ?? pokemens[0].imgPath;
-
-          return (
-            <TouchableHighlight
-              key={battle.id}
-              onPress={() => navigation.navigate("Battle Details", { battle })}
-              underlayColor="#ddd"
-            >
-              <ImageBackground
-                  source={require('@/assets/images/fire_bg.png')}
-                  style={{flex: 1, width: "100%", height: "100%" }}
-                  imageStyle={{opacity: 0.3,}}
-                  resizeMode="cover"
-                >
-                </ImageBackground>
-                <View style={styles.leftContainer}>
-                  <ThemedView style={styles.pkmnInnerContainer}>
-                    <ImageBackground
-                      source={p1path}
-                      style={{ flex: 1, width: "100%", height: "100%" }}
-                      resizeMode="cover"
-                    >
-                    </ImageBackground>
-                    {/* <Image
-                    source={imgPath}
-                    style={styles.pokeman}
-                /> */}
-                    <ThemedText type="default" style={styles.name}>
-                      {pkmn1.name}
-                    </ThemedText>
-                  </ThemedView>
+      return circles;
+    };
+  
+    return (
+      <ParallaxScrollView
+        headerBackgroundColor={{ light: "#D0D0D0", dark: "#353636" }}
+        headerImage={
+          <Image
+            source={require('@/assets/images/battle.png')}
+            style={styles.headerImage}
+          />
+        }
+        noPadding={true}
+      >
+        <ThemedText style={styles.title}>My Battles</ThemedText>
+        <View style={styles.pokemonContainer}>
+          {battles.map((battle: Battle) => {
+            const pkmn1 = battle.p1PkmnName;
+            const pkmn2 = battle.p2PkmnName;
+            if (!pkmn1 || !pkmn2) {
+              return null;
+            }
+  
+            return (
+              <TouchableHighlight
+                key={battle.id}
+                onPress={() => navigation.navigate("Battle Details", { battle: battle })}
+                underlayColor="#ddd"
+                style={styles.pokemonCard}
+              >
+                <View style={styles.outerCard}>
+                  <ThemedText>{`${battle.p1PkmnName} vs. ${battle.p2PkmnName}`}</ThemedText>
                   <View style={styles.healthContainer}>
                     {renderHealthCircles(battle.p1Health)}
-                  </View>
-                </View>
-                <ThemedText style={styles.vsText}>VS.</ThemedText>
-                <View style={styles.rightContainer}>
-                  <ThemedView style={styles.pkmnInnerContainer}>
-                    <ImageBackground
-                      source={p2path}
-                      style={{ flex: 1, width: "100%", height: "100%" }}
-                      resizeMode="cover"
-                    >
-                    </ImageBackground>
-                    {/* <Image
-                    source={imgPath}
-                    style={styles.pokeman}
-                /> */}
-                    <ThemedText type="default" style={styles.name}>
-                      {pkmn2.name}
-                    </ThemedText>
-                  </ThemedView>
-                  <View style={styles.healthContainer}>
                     {renderHealthCircles(battle.p2Health)}
                   </View>
-              </View>
-            </TouchableHighlight>
-          );
-        })}
-        <CreateBattle user={{ uid }} onPostSuccess={refreshData} battle={sampleBattle} />
-      </View>
-    </ParallaxScrollView>
-  );
-}
+                </View>
+              </TouchableHighlight>
+            );
+          })}
+          <CreateBattle onPostSuccess={refreshData} />
+        </View>
+      </ParallaxScrollView>
+    );
+  }
+  
 
 function BattleDetailScreen({ route }: { route: any }) {
     const { battle } = route.params;
@@ -190,7 +121,7 @@ function BattleDetailScreen({ route }: { route: any }) {
         <ThemedText>{`Battle ID: ${battle.id}`}</ThemedText>
         <ThemedText>{`Player 1 Pokémon: ${battle.p1PkmnName} (Health: ${battle.p1Health})`}</ThemedText>
         <ThemedText>{`Player 2 Pokémon: ${battle.p2PkmnName} (Health: ${battle.p2Health})`}</ThemedText>
-        <ThemedText>{`Start Date: ${battle.startDate}`}</ThemedText>
+        <ThemedText>{`Start Date: ${(new Date(battle.startDate)).toDateString()}`}</ThemedText>
       </ThemedView>
     );
   }
