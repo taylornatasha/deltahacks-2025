@@ -6,14 +6,9 @@ import {
   View,
   Alert,
 } from 'react-native';
-import { PyPokeType } from '@/app/(tabs)/pokemon';
+import { PostRequestTypes } from '@/types/poke';
 
-type PostRequestComponentProps = {
-    onPostSuccess: () => void;
-    param: PyPokeType; // Define the expected structure of param
-  };
-
-export const PostRequest = async (param: PostRequestComponentProps) => {
+export const PostRequest = async (param: PostRequestTypes) => {
     const response = await fetch('http://127.0.0.1:8000/api', {
         method: 'POST',
         headers: {
@@ -24,7 +19,7 @@ export const PostRequest = async (param: PostRequestComponentProps) => {
     return response;
 }
 
-export function PostRequestComponent(param: PostRequestComponentProps) {
+export function PostRequestComponent(param: PostRequestTypes) {
   const handlePress = async () => {
     try {
       const response = await PostRequest(param);
@@ -48,7 +43,7 @@ export function PostRequestComponent(param: PostRequestComponentProps) {
         underlayColor="#1e90ff"
         onPress={handlePress}
       >
-        <Text style={styles.buttonText}>Track Habit</Text>
+        <Text style={styles.buttonText}>{param.buttonText}</Text>
       </TouchableHighlight>
     </View>
   );

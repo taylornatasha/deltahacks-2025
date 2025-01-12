@@ -109,6 +109,7 @@ export const CreateHabit : React.FC<CreateHabitProps> = (param: CreateHabitProps
                                 />
                                 <PostRequestComponent 
                                     onPostSuccess={refreshAndToggleVisibility} 
+                                    buttonText="HATCH!"
                                     param={{
                                         'name': nickname, 
                                         'xp': 2, 

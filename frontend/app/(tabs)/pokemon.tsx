@@ -67,12 +67,11 @@
                   xp={poke.xp}
                   habit={poke.habit}
                 />
+                <PostRequestComponent buttonText="TRACK!" onPostSuccess={refreshData} param={{'name': poke.name, 'xp': +poke.xp + 1, 'pokemon': poke.pokemon, 'habit': poke.habit}} />
               </View>
             </TouchableHighlight>
           ))}
           <CreateHabit onPostSuccess={refreshData} />
-          {/* this is just a test */}
-          {/* <PostRequestComponent onPostSuccess={refreshData} param={{'name': 'fred', 'xp': 2, 'pokemon': 'pikachu', 'habit': 'spaghetti'}}/>  */}
         </View>
       </ParallaxScrollView>
     );
