@@ -3,12 +3,15 @@ import { StyleSheet, Button, TextInput, Modal, Animated } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { PostRequest } from './TestPost';
+import { Habit } from '../types/habit';
+import { PostRequestComponent } from './PostRequestComponent';
 
 type CreateHabitProps = {
+    onPostSuccess: () => void;
+
 }
 
-export const CreateHabit : React.FC<CreateHabitProps> = ({} : CreateHabitProps) => {
+export const CreateHabit : React.FC<CreateHabitProps> = (param: CreateHabitProps) => {
     const [isFormVisible, setFormVisible] = useState(false);
     const [habitDesc, setHabitDesc] = useState('');
     const [timesPer, setTimesPer] = useState("1");
@@ -49,6 +52,11 @@ export const CreateHabit : React.FC<CreateHabitProps> = ({} : CreateHabitProps) 
         );
         shake.start(); // Start the animation
       }, [shakeAnim]);
+
+      const refreshAndToggleVisibility = () => {
+        param.onPostSuccess();
+        toggleFormVisibility();
+      }
 
     return (
         <ThemedView style={styles.outerContainer}>
@@ -102,7 +110,7 @@ export const CreateHabit : React.FC<CreateHabitProps> = ({} : CreateHabitProps) 
                             </ThemedView>
                         )
                     }</ThemedView>
-                    <Button title="Hatch!" onPress={handleSubmit} disabled={hatchStarted} />
+                    <PostRequestComponent onPostSuccess={refreshAndToggleVisibility} param={{'name': 'fred', 'xp': 2, 'pokemon': 'pikachu', 'habit': 'spaghetti'}} />
                     <ThemedView style={{height: 10}} />
                     <Button title="Cancel" onPress={toggleFormVisibility} disabled={hatchStarted} />
                 </ThemedView>

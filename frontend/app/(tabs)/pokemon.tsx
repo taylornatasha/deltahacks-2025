@@ -14,7 +14,8 @@
   import { ThemedText } from '@/components/ThemedText';
   import { ThemedView } from '@/components/ThemedView';
   import { PokeHabit } from '@/components/PokemonGuy';
-  import { PostRequestComponent, PostRequest } from '@/components/TestPost';
+  import { PostRequestComponent } from '@/components/PostRequestComponent';
+  import { CreateHabit } from '@/components/CreateHabit';
   
   export type PyPokeType = {
     name: string,
@@ -62,7 +63,7 @@
           {pokemen.map((poke) => (
             <TouchableHighlight
               key={poke.name}
-              onPress={() => navigation.navigate("PokemonDetails", { pokemon: poke })}
+              onPress={() => navigation.navigate("Pokemon Details", { pokemon: poke })}
               underlayColor="#ddd"
             >
               <View style={styles.pokemonCard}>
@@ -75,8 +76,9 @@
               </View>
             </TouchableHighlight>
           ))}
+          <CreateHabit onPostSuccess={refreshData} />
           {/* this is just a test */}
-          <PostRequestComponent onPostSuccess={refreshData} param={{'name': 'fred', 'xp': 2, 'pokemon': 'pikachu', 'habit': 'spaghetti'}}/> 
+          {/* <PostRequestComponent onPostSuccess={refreshData} param={{'name': 'fred', 'xp': 2, 'pokemon': 'pikachu', 'habit': 'spaghetti'}}/>  */}
         </View>
       </ParallaxScrollView>
     );
