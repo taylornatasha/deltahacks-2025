@@ -3,7 +3,7 @@ import { StyleSheet, Button, TextInput, Modal, Animated } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { Habit } from '../types/habit';
+import { PostRequest } from './TestPost';
 
 type CreateHabitProps = {
 }
@@ -15,7 +15,7 @@ export const CreateHabit : React.FC<CreateHabitProps> = ({} : CreateHabitProps) 
     const [period, setPeriod] = useState("Day");
 
     const [hatchStarted, setHatchStart] = useState(false);
-
+    const [pkname, setPkname] = useState('');
 
     const toggleFormVisibility = () => setFormVisible(!isFormVisible);
 
@@ -70,31 +70,38 @@ export const CreateHabit : React.FC<CreateHabitProps> = ({} : CreateHabitProps) 
                         resizeMode="contain"
                     />
                     </ThemedView>
-
-
-                    <TextInput style={styles.input}
-                        placeholder="Go to the gym"
-                        placeholderTextColor="grey"
-                        value={habitDesc}
-                        onChangeText={setHabitDesc}
-                    />
-                    <ThemedView style={styles.inlineContainer}>
-                        <TextInput
-                            style={styles.inlineInput}
-                            keyboardType="numeric"
-                            value={timesPer}
-                            onChangeText={setTimesPer}
-                        />
-                        <ThemedText>     time(s) every     </ThemedText>
-                        <Picker
-                            selectedValue={period}
-                            onValueChange={(itemValue: string) => setPeriod(itemValue)}
-                        >
-                        <Picker.Item label="Day" value="Day" />
-                        <Picker.Item label="Week" value="Week" />
-                        </Picker>
-                    </ThemedView>
-
+                    <ThemedView>{
+                        hatchStarted ? (
+                            <ThemedView>
+                                
+                            </ThemedView>
+                        ) : (
+                            <ThemedView>
+                            <TextInput style={styles.input}
+                                placeholder="Go to the gym"
+                                placeholderTextColor="grey"
+                                value={habitDesc}
+                                onChangeText={setHabitDesc}
+                            />
+                            <ThemedView style={styles.inlineContainer}>
+                                <TextInput
+                                    style={styles.inlineInput}
+                                    keyboardType="numeric"
+                                    value={timesPer}
+                                    onChangeText={setTimesPer}
+                                />
+                                <ThemedText>     time(s) every     </ThemedText>
+                                <Picker
+                                    selectedValue={period}
+                                    onValueChange={(itemValue: string) => setPeriod(itemValue)}
+                                >
+                                <Picker.Item label="Day" value="Day" />
+                                <Picker.Item label="Week" value="Week" />
+                                </Picker>
+                            </ThemedView>
+                            </ThemedView>
+                        )
+                    }</ThemedView>
                     <Button title="Hatch!" onPress={handleSubmit} disabled={hatchStarted} />
                     <ThemedView style={{height: 10}} />
                     <Button title="Cancel" onPress={toggleFormVisibility} disabled={hatchStarted} />
