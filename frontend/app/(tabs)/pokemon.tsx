@@ -67,7 +67,7 @@
                   xp={poke.xp}
                   habit={poke.habit}
                 />
-                <PostRequestComponent buttonText="TRACK!" onPostSuccess={refreshData} param={{'name': poke.name, 'xp': +poke.xp + 1, 'pokemon': poke.pokemon, 'habit': poke.habit}} />
+                <PostRequestComponent buttonText="TRACK!" onPostSuccess={refreshData} param={{'name': poke.name, 'xp': +poke.xp + 1, 'pokemon': poke.pokemon, 'habit': poke.habit, 'startDate': poke.startDate, 'timesPer': poke.timesPer, 'period': poke.period}} />
               </View>
             </TouchableHighlight>
           ))}
