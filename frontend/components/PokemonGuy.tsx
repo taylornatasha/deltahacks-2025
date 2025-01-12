@@ -29,7 +29,7 @@ const PokemonGuy: React.FC<PokeType> = ({imgPath, info}) => {
                     {info.name}
                 </ThemedText>
             </ThemedView>
-            <ThemedText type="default" style={styles.xp}>
+            <ThemedText type="defaultSemiBold" style={styles.xp}>
                 {info.xp}
             </ThemedText>
         </ThemedView>
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
         width: 35,
         textAlign: 'center',
         position: 'absolute',
-        backgroundColor: 'green',
+        backgroundColor: '#6f081f',
         borderWidth: 3,
         borderColor: '#444444',
         borderRadius: 100

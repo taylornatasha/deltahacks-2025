@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, createContext, useContext } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer, NavigationIndependentTree } from "@react-navigation/native";
@@ -6,17 +6,34 @@ import { ThemedText } from "@/components/ThemedText";
 import { CreateHabit } from "@/components/CreateHabit";
 
 const Stack = createStackNavigator();
+const FriendContext = createContext<any>(null);
+
+const FriendProvider = ({ children }: { children: React.ReactNode }) => {
+  const [friends, setFriends] = useState<{ name: string }[]>([]);
+
+  return (
+    <FriendContext.Provider value={{ friends, setFriends }}>
+      {children}
+    </FriendContext.Provider>
+  );
+};
 
 // "Find Friend" Form Screen
 const FindFriendForm = ({ navigation }: { navigation: any }) => {
   const [name, setName] = useState("");
+  const { friends, setFriends } = useContext(FriendContext);
 
   const handleFindFriend = () => {
     if (!name) {
       Alert.alert("Error", "Please fill in all fields.");
       return;
     }
-    navigation.navigate("FriendAdded"); // Navigate to the "Friend Added" screen
+
+    // Add the new friend to the context
+    setFriends([...friends, { name }]);
+
+    // Navigate to the "Friend Added" screen
+    navigation.navigate("FriendAdded");
   };
 
   return (
@@ -35,14 +52,26 @@ const FindFriendForm = ({ navigation }: { navigation: any }) => {
 };
 
 // "Friend Added" Screen
-const FriendAddedScreen = () => {
+const FriendAddedScreen = ({ navigation }: { navigation: any }) => {
+  const { friends } = useContext(FriendContext);
+
+  // Get the latest friend's name
+  const latestFriend = friends[friends.length - 1]?.name || "No Friend";
+
   return (
     <View style={styles.center}>
-      <Text style={styles.message}>Friend added!</Text>
-      <ThemedText>
+      <Text style={styles.message}>Friend {latestFriend} added!</Text>
+      <ThemedText style={styles.submessage}>
         Set up a challenge with your friend!
       </ThemedText>
       <CreateHabit onPostSuccess={() => {}} />
+      <Button
+        title="Find Friend"
+        onPress={() => {
+          navigation.navigate("FindFriend");
+        }}
+        color="#6200ee"
+      />
     </View>
   );
 };
@@ -50,40 +79,42 @@ const FriendAddedScreen = () => {
 // App Component with Navigation
 export default function App() {
   return (
+    <FriendProvider>
     <NavigationIndependentTree>
-        <NavigationContainer>
+      <NavigationContainer>
         <Stack.Navigator>
-            <Stack.Screen
+          <Stack.Screen
             name="FindFriend"
             component={FindFriendForm}
             options={{
-                title: "Find Friends",
-                headerStyle: {
-                backgroundColor: "#6200ee", // Header background color
-                },
-                headerTintColor: "#fff", // Header text and icons color
-                headerTitleStyle: {
-                fontWeight: "bold", // Style for the header title
-                },
+              title: "Find Friends",
+              headerStyle: {
+                backgroundColor: "#6200ee",
+              },
+              headerTintColor: "#fff",
+              headerTitleStyle: {
+                fontWeight: "bold",
+              },
             }}
-            />
-            <Stack.Screen
+          />
+          <Stack.Screen
             name="FriendAdded"
             component={FriendAddedScreen}
             options={{
-                title: "Friend Added",
-                headerStyle: {
-                backgroundColor: "#6200ee", // Header background color
-                },
-                headerTintColor: "#fff", // Header text and icons color
-                headerTitleStyle: {
-                fontWeight: "bold", // Style for the header title
-                },
+              title: "Friend Added",
+              headerStyle: {
+                backgroundColor: "#6200ee",
+              },
+              headerTintColor: "#fff",
+              headerTitleStyle: {
+                fontWeight: "bold",
+              },
             }}
-            />
+          />
         </Stack.Navigator>
-        </NavigationContainer>
-    </NavigationIndependentTree>
+      </NavigationContainer>
+      </NavigationIndependentTree>
+    </FriendProvider>
   );
 }
 
@@ -121,5 +152,12 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: "bold",
     color: "#6200ee",
+  },
+  submessage: {
+    fontSize: 20,
+    fontWeight: "600",
+    marginTop: 5,
+    marginBottom: 20,
+    color: "#fff",
   },
 });
