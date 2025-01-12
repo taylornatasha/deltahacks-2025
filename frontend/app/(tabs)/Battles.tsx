@@ -6,6 +6,7 @@ import {
   TouchableHighlight,
   View,
   InteractionManager,
+  ImageBackground,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -40,6 +41,22 @@ function BattleScreen({ navigation }: { navigation: any }) {
     startDate: ''
   }
 
+  const renderHealthCircles = (health: number) => {
+    const circles = [];
+    for (let i = 0; i < 3; i++) {
+      circles.push(
+        <View
+          key={i}
+          style={[
+            styles.healthCircle,
+            { backgroundColor: i < health ? "green" : "red" },
+          ]}
+        />
+      );
+    }
+    return circles;
+  };
+
   const { uid, setUid, clearUid } = useAppContext();
   const [pokemen, setPokeman] = useState<PyPokeType[]>([]);
   const [battles, setBattles] = useState<Battle[]>([sampleBattle]);
@@ -51,7 +68,7 @@ function BattleScreen({ navigation }: { navigation: any }) {
       console.log("response:", response)
       const data: PyPokeType[] = await response.json();
       setPokeman(data);
-     // console.log(data);
+      // console.log(data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -97,7 +114,7 @@ function BattleScreen({ navigation }: { navigation: any }) {
           if (!pkmn1 || !pkmn2) {
             return null;
           }
-          
+
           const p1path = pokemens.find((p) => p.pokemonID === pkmn1.pokemon)?.imgPath ?? pokemens[0].imgPath;
           const p2path = pokemens.find((p) => p.pokemonID === pkmn2.pokemon)?.imgPath ?? pokemens[0].imgPath;
 
@@ -108,24 +125,57 @@ function BattleScreen({ navigation }: { navigation: any }) {
               underlayColor="#ddd"
             >
               <View style={styles.outerCard}>
+                <ImageBackground
+                  source={require('@/assets/images/fire_bg.png')}
+                  style={styles.firebg}
+                  imageStyle={styles.firebgimage}
+                >
+                </ImageBackground>
                 <View style={styles.leftContainer}>
-                  <PokemonGuy
-                    info={ pkmn1 }
-                    imgPath={p1path}
-                  />
+                  <ThemedView style={styles.pkmnInnerContainer}>
+                    <ImageBackground
+                      source={p1path}
+                      style={{ flex: 1, width: "100%", height: "100%" }}
+                      resizeMode="cover"
+                    >
+                    </ImageBackground>
+                    {/* <Image
+                    source={imgPath}
+                    style={styles.pokeman}
+                /> */}
+                    <ThemedText type="default" style={styles.name}>
+                      {pkmn1.name}
+                    </ThemedText>
+                  </ThemedView>
+                  <View style={styles.healthContainer}>
+                    {renderHealthCircles(battle.p1Health)}
+                  </View>
                 </View>
                 <ThemedText style={styles.vsText}>VS.</ThemedText>
                 <View style={styles.rightContainer}>
-                <PokemonGuy
-                    info={ pkmn2 }
-                    imgPath={p2path}
-                  />
+                  <ThemedView style={styles.pkmnInnerContainer}>
+                    <ImageBackground
+                      source={p2path}
+                      style={{ flex: 1, width: "100%", height: "100%" }}
+                      resizeMode="cover"
+                    >
+                    </ImageBackground>
+                    {/* <Image
+                    source={imgPath}
+                    style={styles.pokeman}
+                /> */}
+                    <ThemedText type="default" style={styles.name}>
+                      {pkmn2.name}
+                    </ThemedText>
+                  </ThemedView>
+                  <View style={styles.healthContainer}>
+                    {renderHealthCircles(battle.p2Health)}
+                  </View>
                 </View>
               </View>
             </TouchableHighlight>
           );
         })}
-        <ThemedText>{pokemen.length}</ThemedText>
         <CreateBattle user={{ uid }} onPostSuccess={() => { }} />
       </View>
     </ParallaxScrollView>
@@ -216,52 +266,70 @@ const styles = StyleSheet.create({
     textAlign: "center",
     margin: 5,
   },
-  pokemonImage: {
-    width: '100%',
-    height: 150,
-    marginBottom: 16
-  },
-  valid: {
-    height: 4,
-    backgroundColor: "green",
-    width: "98%", // Same as valid for consistency
-    textAlign: "center",
-    paddingVertical: 4,
-    color: "white",
-    alignSelf: "center",
-    marginTop: "auto"
-  },
-  invalid: {
-    height: 4,
-    backgroundColor: "red",
-    width: "98%", // Same as valid for consistency
-    textAlign: "center",
-    paddingVertical: 4,
-    color: "white",
-    alignSelf: "center",
-    marginTop: "auto"
-  },
   outerCard: {
     borderWidth: 2,
     borderColor: "#444444",
     borderRadius: 8,
     paddingBottom: 8,
-    justifyContent: "center"
+    justifyContent: "space-between",
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center"
   },
   leftContainer: {
     flex: 1,
+    height: 100,
     justifyContent: "center",
     alignItems: "flex-start",
+    width: "35%",
+    flexDirection: "row"
   },
   rightContainer: {
     flex: 1,
+    height: 100,
     justifyContent: "center",
     alignItems: "flex-end",
+    width: "35%",
+    flexDirection: "row"
   },
   vsText: {
     fontSize: 24,
     fontWeight: "bold",
     color: "black",
+  },
+  healthContainer: {
+    flexDirection: "column",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    marginLeft: 10,
+    height: 100
+  },
+  healthCircle: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+  },
+  name: {
+    bottom: 4,
+    textAlign: 'center',
+    alignSelf: 'center',
+    position: 'absolute',
+    width: '100%',
+    fontWeight: "bold",
+    color: "white",
+    textShadowColor: "black",
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 3,
+  },
+  pkmnInnerContainer: {
+    height: '100%',
+    width: 100,
+    position: 'relative',
+    backgroundColor: '#b78727',
+    borderRadius: 7,
+    borderWidth: 2,
+    borderColor: '#444444',
+    overflow: "hidden",
   },
 });
 
