@@ -62,10 +62,16 @@
             >
               <View style={styles.pokemonCard}>
                 <PokeHabit
-                  name={poke.name}
                   imgPath={pokemonToImageMap[poke.pokemon]}
-                  xp={poke.xp}
-                  habit={poke.habit}
+                  info={{
+                    name: poke.name,
+                    xp: poke.xp,
+                    habit: poke.habit,
+                    pokemon: poke.pokemon,
+                    startDate: poke.startDate,
+                    timesPer: poke.timesPer,
+                    period: poke.period
+                  }}
                 />
                 <PostRequestUpdate buttonText="TRACK!" onPostSuccess={refreshData}
                     param={{'name': poke.name, 'xp': poke.xp, 'pokemon': poke.pokemon, 'habit': poke.habit, 'startDate': poke.startDate, 'timesPer': poke.timesPer, 'period': poke.period}} />
@@ -101,7 +107,16 @@
         <NavigationIndependentTree>
             <NavigationContainer>
                 <Stack.Navigator>
-                    <Stack.Screen name="My Pokemen" component={PokemonScreen} />
+                    <Stack.Screen name="MY POKEMANS" component={PokemonScreen}
+                        options={{
+                            headerStyle: {
+                                backgroundColor: "#6200ee", // Header background color
+                            },
+                            headerTintColor: "#fff", // Header text and icons color
+                            headerTitleStyle: {
+                                fontWeight: "bold", // Style for the header title
+                            },
+                        }} />
                     <Stack.Screen name="PokemonDetails" component={PokemonDetailsScreen} />
                 </Stack.Navigator>
             </NavigationContainer>
@@ -146,20 +161,19 @@
       flexDirection: 'row',
       position: 'relative',
       borderWidth: 2,
-      borderColor: '#444444'
+      borderColor: '#444444',
+      padding: 4
     },
     detailsContainer: {
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
-      padding: 16,
+      padding: 16
     },
     pokemonImage: {
       width: '100%',
       height: 150,
-      marginBottom: 16,
-      borderWidth: 2,
-      borderColor: 'blue'
+      marginBottom: 16
     }
   });
 

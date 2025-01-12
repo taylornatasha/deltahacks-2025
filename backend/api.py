@@ -1,6 +1,6 @@
 from flask import Flask, request, Response, jsonify
 from flask_cors import CORS
-from csvThings import write_habit, read_habits, increase_xp
+from updateJson import write_habit, read_habits, increase_xp
 
 app = Flask(__name__)
 CORS(app)
@@ -31,12 +31,11 @@ def handle_post_request():
 def handle_increase_xp():
     data = request.get_json()  # Parse the incoming JSON data
     data = data.get('param', None)
-    if not data or 'name' not in data:
-        return jsonify({"error": "Invalid request: 'name' is required"}), 400
-
+    if not data or 'habit' not in data:
+        return jsonify({"error": "Invalid request: 'habit' is required"}), 400
     try:
-        increase_xp(data['name'])
-        return jsonify({"success": f"XP increased for habit '{data['name']}'"}), 200
+        increase_xp(data['habit'])
+        return jsonify({"success": f"XP increased for habit '{data['habit']}'"}), 200
     except ValueError as e:
         return jsonify({"error": str(e)}), 404
 

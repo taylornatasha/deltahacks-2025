@@ -54,11 +54,15 @@ def increase_xp(habit_name):
         raise ValueError("No data file found!")
 
     with open(json_file, 'r', encoding='utf-8') as file:
-        habits = json.load(file)
+        try:
+            habits = json.load(file)
+        except json.JSONDecodeError as e:
+            print("empty json???")
+            return
 
     habit_found = False
     for habit in habits:
-        if habit['name'] == habit_name:
+        if habit['habit'] == habit_name:
             habit['xp'] = int(habit['xp']) + 1
             habit_found = True
             break

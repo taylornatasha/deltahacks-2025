@@ -1,21 +1,23 @@
 import { Image, StyleSheet, Platform, ImageSourcePropType } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { PokeType } from '@/types/poke';
+import { PokeType, PyPokeType } from '@/types/poke';
 
 // give type !
-export const PokeHabit: any = (pokemon: any) => {
+export const PokeHabit: React.FC<PokeType> = ({imgPath, info}) => {
     return (
         <ThemedView style={styles.habitContainer}>
-            <PokemonGuy name={pokemon.name} imgPath={pokemon.imgPath} xp={pokemon.xp} />
+            <PokemonGuy 
+                info={{name: info.name, xp: info.xp, pokemon: info.pokemon, habit: info.habit, startDate: info.startDate, timesPer: info.timesPer, period: info.period}}  
+                imgPath={imgPath}  />
             <ThemedText type="defaultSemiBold" style={styles.habitInfo}>
-                {pokemon.habit} {"\n"}hi
+                {info.habit + "\n" + info.timesPer} time(s) per {info.period}
             </ThemedText>
         </ThemedView>
     )
 }
 
-const PokemonGuy: React.FC<PokeType> = ({name, imgPath, xp}) => {
+const PokemonGuy: React.FC<PokeType> = ({imgPath, info}) => {
     return (
         <ThemedView style={styles.outerContainer}>
             <ThemedView style={styles.innerContainer}>
@@ -24,11 +26,11 @@ const PokemonGuy: React.FC<PokeType> = ({name, imgPath, xp}) => {
                     style={styles.pokeman}
                 />
                 <ThemedText type="default" style={styles.name}>
-                    {name}
+                    {info.name}
                 </ThemedText>
             </ThemedView>
             <ThemedText type="default" style={styles.xp}>
-                {xp}
+                {info.xp}
             </ThemedText>
         </ThemedView>
     );
@@ -51,7 +53,7 @@ const styles = StyleSheet.create({
         maxWidth: '80%',
         // flex: 1,
         position: 'relative',
-        backgroundColor: 'green',
+        backgroundColor: '#b78727',
         borderRadius: 7,
         borderWidth: 2,
         borderColor: '#444444'
@@ -61,7 +63,8 @@ const styles = StyleSheet.create({
       width: 60,
       top: 10,
       alignSelf: 'center',
-      position: 'absolute'
+      position: 'absolute',
+      borderRadius: 2
     },
     name: {
         bottom: 4,
@@ -94,6 +97,6 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         right: 0,
         position: 'relative',
-        width: '30%'
+        width: '40%'
     }
   });

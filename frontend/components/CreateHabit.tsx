@@ -16,7 +16,7 @@ type CreateHabitProps = {
 
 export const CreateHabit : React.FC<CreateHabitProps> = (param: CreateHabitProps) => {
     const [isFormVisible, setFormVisible] = useState(false);
-    const [habitDesc, setHabitDesc] = useState('');
+    const [habitDesc, setHabitDesc] = useState("Go to the gym");
     const [timesPer, setTimesPer] = useState("1");
     const [period, setPeriod] = useState("Day");
 
@@ -73,7 +73,7 @@ export const CreateHabit : React.FC<CreateHabitProps> = (param: CreateHabitProps
 
     return (
         <ThemedView style={styles.outerContainer}>
-            <Button title="Add New Habit" onPress={toggleFormVisibility} />
+            <Button color="#6200ee" title="Add New Habit" onPress={toggleFormVisibility} />
 
             <Modal 
                 visible={isFormVisible}
@@ -111,7 +111,7 @@ export const CreateHabit : React.FC<CreateHabitProps> = (param: CreateHabitProps
                                 />
                                 <PostRequestOverwrite 
                                     onPostSuccess={refreshAndToggleVisibility} 
-                                    buttonText="HATCH!"
+                                    buttonText="START TRACKING"
                                     param={{
                                         'name': nickname, 
                                         'xp': 1, 
@@ -148,9 +148,9 @@ export const CreateHabit : React.FC<CreateHabitProps> = (param: CreateHabitProps
                                 <Picker.Item label="Week" value="Week" />
                                 </Picker>
                             </ThemedView>
-                            <Button title="Hatch!" onPress={handleHatch} disabled={hatchStarted} />
+                            <Button color="#6200ee" title="Hatch!" onPress={handleHatch} disabled={hatchStarted} />
                     <ThemedView style={{height: 10}} />
-                    <Button title="Cancel" onPress={toggleFormVisibility} disabled={hatchStarted} />
+                    <Button color="#6200ee" title="Cancel" onPress={toggleFormVisibility} disabled={hatchStarted} />
                             </ThemedView>
                         )
                     }</ThemedView>
@@ -163,6 +163,7 @@ export const CreateHabit : React.FC<CreateHabitProps> = (param: CreateHabitProps
 
 const styles = StyleSheet.create({
     outerContainer: {
+        // Uncomment and adjust if needed
         // height: 110,
         // width: 110,
         // padding: 15,
@@ -177,38 +178,45 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 20, 
         alignSelf: 'center',
+        color: '#ffffff', // Bright text color for dark mode
     },
     hatchModal: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        backgroundColor: 'rgba(0, 0, 0, 0.7)', // Dark transparent overlay
     },
     innerContainer: {
         width: '90%',
         height: '80%',  
-        //justifyContent: 'center',
-        backgroundColor: 'white',
+        backgroundColor: '#1f1f1f', // Dark background for container
         padding: 20,
         margin: 20,
         borderRadius: 10,
+        shadowColor: '#000', // Optional: Shadow effect for depth
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+        elevation: 5,
     },
     input: {
         height: 40,
-        borderColor: '#ccc',
+        borderColor: '#555', // Subtle border for inputs
         borderWidth: 1,
         marginBottom: 10,
         paddingLeft: 8,
+        backgroundColor: '#151718', // Dark input background
+        color: '#fff', // Light text inside the input
     },
     egg: {
         width: '100%',
-        height: '100%'
+        height: '100%',
     },
     pkmn: {
         width: '100%',
         height: '100%',
         borderWidth: 2,
-        borderColor: "#ccc",
+        borderColor: "#555", // Subtle border for images
         borderRadius: 10,
     },
     inlineContainer: {
@@ -218,13 +226,15 @@ const styles = StyleSheet.create({
     inlineInput: {
         width: '30%',
         height: 40,
-        borderColor: '#ccc',
+        borderColor: '#555', // Subtle border
         borderWidth: 1,
         marginBottom: 10,
         paddingLeft: 8,
+        backgroundColor: '#151718', // Dark background
+        color: '#fff', // Light text color
     },
     centered: {
         justifyContent: 'center', // vertically
         alignItems: 'center', // horizontally
     },
-  });
+});

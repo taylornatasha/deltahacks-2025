@@ -1,9 +1,8 @@
 import { ImageSourcePropType } from "react-native"
 
 export type PokeType = {
-    name: string,
     imgPath: ImageSourcePropType,
-    xp: number
+    info: PyPokeType
 }
 
 export type PyPokeType = {
