@@ -3,6 +3,8 @@ from pathlib import Path
 
 # Define the keys for habit data
 habit_keys = ['name', 'xp', 'pokemon', 'habit', 'startDate', 'timesPer', 'period', 'lastDoneTime']
+battle_keys = ['id', 'p1', 'p2', 'p1PkmnName', 'p2PkmnName', 'p1Health', 'p2Health', 'startDate']
+
 
 def read_habits(json_file):
     """
@@ -40,6 +42,25 @@ def write_habit(habit, json_file):
 
     with open(json_file, 'w', encoding='utf-8') as file:
         json.dump(habits, file, indent=4)
+
+def write_battle(battle, json_file):
+    if not all(key in battle for key in battle_keys):
+        raise ValueError(f"Battle must contain the following keys: {battle_keys}")
+
+    if Path(json_file).exists():
+        try:
+            with open(json_file, 'r', encoding='utf-8') as file:
+                battles = json.load(file)
+        except json.JSONDecodeError as e:
+            print("empty json")
+            battles = []
+    else:
+        battles = []
+
+    battles.append(battle)
+
+    with open(json_file, 'w', encoding='utf-8') as file:
+        json.dump(battles, file, indent=4)
 
 def increase_xp(habit_name, json_file):
     """

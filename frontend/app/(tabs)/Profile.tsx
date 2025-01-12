@@ -1,38 +1,94 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Image, TextInput, Button } from "react-native";
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer, NavigationIndependentTree } from '@react-navigation/native';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useAppContext } from "../context/AppContext";
 
-// App Component
-export default function App() {
-    const [profileName, setProfileName] = useState('');
-    const { uid, setUid, clearUid } = useAppContext();
+const Stack = createStackNavigator();
 
+const SignInScreen = ({ navigation }: { navigation: any }) => {
+    const [profileName, setProfileName] = useState("");
+    const { uid, setUid } = useAppContext();
+    const [pendingUid, setPendingUid] = useState<number | null>(null);
+  
+    const handleSignIn = () => {
+      const newUid = profileName.toLowerCase() === "thomas" ? 1 : 0;
+      setUid(newUid); // Update the uid state
+      setPendingUid(newUid); // Track the newUid for comparison
+    };
+  
+    useEffect(() => {
+      // React when `uid` is updated and matches the pendingUid
+      if (uid === pendingUid && uid !== null) {
+          navigation.navigate("Success", { user: profileName });
+          console.log("isThomas:", uid);
+        setPendingUid(null); // Clear pendingUid after handling
+      }
+    }, [uid, pendingUid, navigation]);
+
+  return (
+    <ParallaxScrollView
+      headerBackgroundColor={{ light: '#FFFFFF', dark: '#1f1f1f' }}
+      headerImage={
+        <Image
+          source={require('@/assets/images/festive_little_guys.png')}
+          style={styles.banner}
+        />
+      }>
+      <ThemedView style={styles.titleContainer}>
+        <ThemedText type="title">Profile</ThemedText>
+      </ThemedView>
+      <ThemedView style={styles.stepContainer}>
+        <ThemedText>Name:</ThemedText>
+        <TextInput
+          style={styles.input}
+          placeholder="User"
+          value={profileName}
+          onChangeText={setProfileName}
+        />
+      </ThemedView>
+      <Button title="Sign In" onPress={handleSignIn} />
+    </ParallaxScrollView>
+  );
+};
+
+const SuccessScreen = ({ route }: { route: any }) => {
+    const { user } = route.params;
+    const { uid, setUid } = useAppContext();
     return (
-        <ParallaxScrollView
-            headerBackgroundColor={{ light: '#FFFFFF', dark: '#1f1f1f' }}
-            headerImage={
-                <Image
-                    source={require('@/assets/images/festive_little_guys.png')}
-                    style={styles.banner}
-                />
-            }>
-            <ThemedView style={styles.titleContainer}>
-                <ThemedText type="title">Profile</ThemedText>
-            </ThemedView>
-            <ThemedView style={styles.stepContainer}>
-                <ThemedText>Name:</ThemedText>
-                <TextInput style={styles.input}
-                    placeholder="User"
-                    value={profileName}
-                    onChangeText={setProfileName}
-                />
-            </ThemedView>
-            <Button title="Sign In" onPress={() => {setUid(profileName.toLowerCase() == "thomas" ? 1 : 0)}} />
-        </ParallaxScrollView>
+        <View style={styles.center}>
+        <Text style={styles.message}>🎉 Sign-In Successful! 🎉</Text>
+        <Text style={styles.submessage}>Welcome, {user}!</Text>
+        </View>
     );
+};
+
+export default function App() {
+  return (
+    <NavigationIndependentTree>
+        <NavigationContainer>
+        <Stack.Navigator initialRouteName="SignIn">
+            <Stack.Screen
+            name="SignIn"
+            component={SignInScreen}
+            options={{ headerShown: false }}
+            />
+            <Stack.Screen
+            name="Success"
+            component={SuccessScreen}
+            options={{
+                headerTitle: "Success",
+                headerStyle: { backgroundColor: '#6200ee' },
+                headerTintColor: '#fff',
+            }}
+            />
+        </Stack.Navigator>
+        </NavigationContainer>
+    </NavigationIndependentTree>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -75,12 +131,12 @@ const styles = StyleSheet.create({
     input: {
         height: 50,
         borderColor: "#ccc",
-        //color: "#fff",
+        color: "#fff",
         borderWidth: 1,
         borderRadius: 5,
         marginBottom: 20,
         paddingHorizontal: 10,
-        //backgroundColor: "#151718",
+        backgroundColor: "#151718",
     },
     center: {
         flex: 1,
