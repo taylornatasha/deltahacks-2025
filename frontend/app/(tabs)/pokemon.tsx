@@ -19,6 +19,18 @@
   import { PyPokeType } from '@/types/poke';
   
   const Stack = createStackNavigator();
+
+  const inTargetTime = (startDate: string, timesPer: number, period: string) => {
+    const date1: any = new Date(startDate);
+    const date2: any = new Date();
+
+    // Calculate the difference in milliseconds
+    const differenceInMilliseconds = date2 - date1;
+    const maxTargetDifference = periodToTimeMap[period] / timesPer;
+
+    return differenceInMilliseconds < maxTargetDifference;
+
+  }
   
   //pokemon screen displaying all pokemon
   function PokemonScreen({ navigation }: { navigation: any }) {
@@ -60,21 +72,25 @@
               onPress={() => navigation.navigate("Pokemon Details", { pokemon: poke })}
               underlayColor="#ddd"
             >
-              <View style={styles.pokemonCard}>
-                <PokeHabit
-                  imgPath={pokemonToImageMap[poke.pokemon]}
-                  info={{
-                    name: poke.name,
-                    xp: poke.xp,
-                    habit: poke.habit,
-                    pokemon: poke.pokemon,
-                    startDate: poke.startDate,
-                    timesPer: poke.timesPer,
-                    period: poke.period
-                  }}
-                />
-                <PostRequestUpdate buttonText="TRACK!" onPostSuccess={refreshData}
-                    param={{'name': poke.name, 'xp': poke.xp, 'pokemon': poke.pokemon, 'habit': poke.habit, 'startDate': poke.startDate, 'timesPer': poke.timesPer, 'period': poke.period}} />
+            <View style={styles.outerCard}>
+                <View style={styles.pokemonCard}>
+                    <PokeHabit
+                    imgPath={pokemonToImageMap[poke.pokemon]}
+                    info={{
+                        name: poke.name,
+                        xp: poke.xp,
+                        habit: poke.habit,
+                        pokemon: poke.pokemon,
+                        startDate: poke.startDate,
+                        timesPer: poke.timesPer,
+                        period: poke.period
+                    }}
+                    />
+                    <PostRequestUpdate buttonText="TRACK!" onPostSuccess={refreshData}
+                        param={{'name': poke.name, 'xp': poke.xp, 'pokemon': poke.pokemon, 'habit': poke.habit, 'startDate': poke.startDate, 'timesPer': poke.timesPer, 'period': poke.period}} />
+                </View>
+                <View style={inTargetTime(poke.startDate, poke.timesPer, poke.period) ? styles.valid : styles.invalid}>
+                </View>
               </View>
             </TouchableHighlight>
           ))}
@@ -147,22 +163,21 @@
       position: 'relative'
     },
     pokemonCard: {
-      width: "100%",
-      marginVertical: 8, // Add vertical spacing between cards
-      marginHorizontal: 0,
-      justifyContent: "center",
-      borderRadius: 8,
-      elevation: 3,
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
-      flex: 1,
-      flexDirection: 'row',
-      position: 'relative',
-      borderWidth: 2,
-      borderColor: '#444444',
-      padding: 4
+        width: "100%",
+        marginVertical: 8,
+        marginHorizontal: 0,
+        justifyContent: "space-between", // Distribute space vertically
+        alignItems: "center", // Center elements horizontally
+        elevation: 3,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        flex: 1,
+        flexDirection: "row", // Stack elements vertically,
+        flexWrap: "wrap",
+        position: "relative",
+        padding: 8, // Adjust padding for better spacing
     },
     detailsContainer: {
       flex: 1,
@@ -174,6 +189,33 @@
       width: '100%',
       height: 150,
       marginBottom: 16
+    },
+    valid: {
+        height: 4,
+        backgroundColor: "green",
+        width: "98%", // Same as valid for consistency
+        textAlign: "center",
+        paddingVertical: 4,
+        color: "white",
+        alignSelf: "center",
+        marginTop: "auto"
+    },
+    invalid: {
+        height: 4,
+        backgroundColor: "red",
+        width: "98%", // Same as valid for consistency
+        textAlign: "center",
+        paddingVertical: 4,
+        color: "white",
+        alignSelf: "center",
+        marginTop: "auto"
+    },
+    outerCard: {
+        borderWidth: 2,
+        borderColor: "#444444",
+        borderRadius: 8,
+        marginBottom: 8,
+        justifyContent: "center"
     }
   });
 
@@ -182,3 +224,8 @@
     Deermon: require("@/assets/images/pkmn_reindeer.png"),
     Jinglemon: require("@/assets/images/pkmn_elf.png")
   };
+
+  const periodToTimeMap: { [key: string]: number } = {
+    Day: 24 * 60 * 60 * 100,
+    Week: 7 * 24 * 60 * 60 * 100
+  }

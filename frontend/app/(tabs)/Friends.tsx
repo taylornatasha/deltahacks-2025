@@ -64,14 +64,30 @@ const FriendAddedScreen = ({ navigation }: { navigation: any }) => {
       <ThemedText style={styles.submessage}>
         Set up a challenge with your friend!
       </ThemedText>
-      <CreateHabit onPostSuccess={() => {}} />
-      <Button
-        title="Find Friend"
-        onPress={() => {
-          navigation.navigate("FindFriend");
-        }}
-        color="#6200ee"
-      />
+      {/* should modify to be group challenge... */}
+      <View style={styles.buttons}>
+        <View style={styles.button}>
+            <CreateHabit onPostSuccess={() => {}} />
+        </View>
+        <View style={styles.button}>
+            <Button
+                title="Find Friend"
+                onPress={() => {
+                navigation.navigate("FindFriend");
+                }}
+                color="#6200ee"
+            />
+        </View>
+    </View>
+      <View style={styles.friendlist}>
+            {friends.map((friend : {name: string}) => {
+                return (<View style={styles.friend}>
+                    <ThemedText>
+                        {friend.name}
+                    </ThemedText>
+                </View>)
+            })}
+        </View>
     </View>
   );
 };
@@ -152,6 +168,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: "bold",
     color: "#6200ee",
+    marginTop: 40
   },
   submessage: {
     fontSize: 20,
@@ -160,4 +177,37 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: "#fff",
   },
+  friend: {
+        color: "#fff",
+        width: "40%",
+        paddingHorizontal: 10, // Adjust horizontal padding for text
+        marginHorizontal: 2,
+        marginVertical: 5, // Slightly increased for better spacing
+        backgroundColor: "#6200ee",
+        borderRadius: 5,
+        position: "relative",
+        height: 40,
+        alignItems: "center", // Center horizontally
+        justifyContent: "center", // Center vertically
+        textAlign: "center", // Ensure text alignment in multi-line content
+    },
+    friendlist: {
+        width: "100%",
+        flex: 1,
+        flexWrap: "wrap",
+        flexDirection: "row",
+        justifyContent: "space-between", // Ensure space distribution,
+        alignContent: "center",
+        padding: 40
+    },
+    buttons: {
+        flex: 1,
+        maxHeight: 35,
+        flexDirection: "row",
+        justifyContent: "space-between"
+    },
+    button: {
+        margin: 10,
+        top: 0
+    }
 });
