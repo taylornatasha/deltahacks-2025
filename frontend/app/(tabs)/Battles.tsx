@@ -125,12 +125,12 @@ function BattleScreen({ navigation }: { navigation: any }) {
               underlayColor="#ddd"
             >
               <View style={styles.outerCard}>
-                <ImageBackground
+                {/* <ImageBackground
                   source={require('@/assets/images/fire_bg.png')}
                   style={styles.firebg}
                   imageStyle={styles.firebgimage}
                 >
-                </ImageBackground>
+                </ImageBackground> */}
                 <View style={styles.leftContainer}>
                   <ThemedView style={styles.pkmnInnerContainer}>
                     <ImageBackground
