@@ -270,7 +270,8 @@ export const CreateGroupHabit : React.FC<CreateHabitProps> = (param: CreateHabit
                                         'habit': habitDesc,
                                         'startDate' : (new Date).toISOString(),
                                         'timesPer': parseInt(timesPer),
-                                        'period': period
+                                        'period': period,
+                                        'lastDoneTime': ""
                                     }} 
                                 />
                                 {/* <Confetti count={50}/> */}

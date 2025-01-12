@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Image, TextInput } from "react-native";
+import { View, Text, StyleSheet, Image, TextInput, Button } from "react-native";
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { useAppContext } from "../context/AppContext";
 
 // App Component
 export default function App() {
     const [profileName, setProfileName] = useState('');
+    const { uid, setUid, clearUid } = useAppContext();
 
     return (
         <ParallaxScrollView
@@ -28,6 +30,7 @@ export default function App() {
                     onChangeText={setProfileName}
                 />
             </ThemedView>
+            <Button title="Sign In" onPress={() => {setUid(profileName.toLowerCase() == "thomas" ? 1 : 0)}} />
         </ParallaxScrollView>
     );
 }
