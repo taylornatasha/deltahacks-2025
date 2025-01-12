@@ -65,6 +65,7 @@ export const CreateHabit : React.FC<CreateHabitProps> = (param: CreateHabitProps
 
       const refreshAndToggleVisibility = () => {
         param.onPostSuccess();
+        setHatchStart(false);
         toggleFormVisibility();
       }
 
@@ -99,13 +100,22 @@ export const CreateHabit : React.FC<CreateHabitProps> = (param: CreateHabitProps
                         hatchStarted ? (
                             <ThemedView style={styles.centered}>
                                 <ThemedText>It's a <ThemedText style={{ fontWeight: 'bold' }}>{pkmnName}</ThemedText>!</ThemedText>
+                                <ThemedText>Give it a name:</ThemedText>
+                                <TextInput style={styles.input} 
+                                    placeholder={pkmnName}
+                                    placeholderTextColor="grey"
+                                    value={nickname}
+                                    onChangeText={setNickname}
+                                />
                                 <PostRequestComponent 
                                     onPostSuccess={refreshAndToggleVisibility} 
                                     param={{
                                         'name': nickname, 
                                         'xp': 2, 
                                         'pokemon': pkmnName, 
-                                        'habit': habitDesc
+                                        'habit': habitDesc,
+                                        'timesPer': timesPer,
+                                        'period': period
                                     }} 
                                 />
                             </ThemedView>

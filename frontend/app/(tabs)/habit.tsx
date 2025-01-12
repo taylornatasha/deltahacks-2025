@@ -44,7 +44,7 @@ export default function HabitScreen() {
         </ThemedView>
         </ParallaxScrollView>
 
-        <CreateHabit />
+        {/* <CreateHabit /> */}
 
         <FlatList
             data={tempHabits}

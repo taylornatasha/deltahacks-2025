@@ -10,7 +10,10 @@ export type PyPokeType = {
     name: string,
     xp: number,
     pokemon: string,
-    habit: string
+    habit: string,
+    startDate: string,
+    timesPer: number,
+    period: string
   };
 
 export type PokeData = {

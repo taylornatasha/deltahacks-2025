@@ -1,6 +1,6 @@
 import csv
 
-habit_keys = ['name', 'xp', 'pokemon', 'habit']
+habit_keys = ['name', 'xp', 'pokemon', 'habit', 'timesPer', 'period']
 
 def write_habit(habits):
     with open('habits.csv', 'w', newline='') as csvfile:
