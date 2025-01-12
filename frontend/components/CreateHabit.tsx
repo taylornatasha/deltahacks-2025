@@ -7,6 +7,7 @@ import { Habit } from '../types/habit';
 import { PostRequestComponent } from './PostRequestComponent';
 import { pokemens } from '@/constants/PokemenCatalog';
 import { PokeData } from '@/types/poke';
+//import Confetti from 'react-native-simple-confetti';
 
 type CreateHabitProps = {
     onPostSuccess: () => void;
@@ -34,6 +35,7 @@ export const CreateHabit : React.FC<CreateHabitProps> = (param: CreateHabitProps
         const pkmn = { ...pokemens[randIdx] };
         setPkmnName(pkmn.pokemonID);
         setPkmnImg(pkmn.imgPath);
+        setNickname(pkmn.pokemonID);
     };
 
     const shakeAnim = useRef(new Animated.Value(0)).current;
@@ -115,10 +117,12 @@ export const CreateHabit : React.FC<CreateHabitProps> = (param: CreateHabitProps
                                         'xp': 2, 
                                         'pokemon': pkmnName, 
                                         'habit': habitDesc,
-                                        'timesPer': timesPer,
+                                        'startDate' : (new Date).toISOString(),
+                                        'timesPer': parseInt(timesPer),
                                         'period': period
                                     }} 
                                 />
+                                {/* <Confetti count={50}/> */}
                             </ThemedView>
                         ) : (
                             <ThemedView>
