@@ -114,7 +114,7 @@ export const CreateHabit : React.FC<CreateHabitProps> = (param: CreateHabitProps
                                     buttonText="START TRACKING"
                                     param={{
                                         'name': nickname, 
-                                        'xp': 1, 
+                                        'xp': 0, 
                                         'pokemon': pkmnName, 
                                         'habit': habitDesc,
                                         'startDate' : (new Date).toISOString(),

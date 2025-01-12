@@ -20,7 +20,7 @@
   
   const Stack = createStackNavigator();
 
-  const inTargetTime = (startDate: string, timesPer: number, period: string) => {
+  const inTargetTime = (xp: number, startDate: string, timesPer: number, period: string) => {
     const date1: any = new Date(startDate);
     const date2: any = new Date();
 
@@ -28,33 +28,58 @@
     const differenceInMilliseconds = date2 - date1;
     const maxTargetDifference = periodToTimeMap[period] / timesPer;
 
-    return differenceInMilliseconds < maxTargetDifference;
+    return (differenceInMilliseconds / xp) < maxTargetDifference;
 
   }
   
-  //pokemon screen displaying all pokemon
   function PokemonScreen({ navigation }: { navigation: any }) {
     const [pokemen, setPokeman] = useState<PyPokeType[]>([]);
     const [refreshTrigger, setRefreshTrigger] = useState(false);
+    const [validationStatuses, setValidationStatuses] = useState<{ [key: string]: boolean }>({});
   
     const fetchPokemen = async () => {
-        try {
-          const response = await fetch("http://127.0.0.1:8000/");
-          const data: PyPokeType[] = await response.json();
-          setPokeman(data);
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
-      };
-    
+      try {
+        const response = await fetch("http://127.0.0.1:8000/");
+        const data: PyPokeType[] = await response.json();
+        setPokeman(data);
+  
+        // Initialize validation statuses for all Pokémon
+        const initialStatuses: { [key: string]: boolean } = {};
+        data.forEach((poke) => {
+          initialStatuses[poke.name] = false; // Default to invalid initially
+        });
+        setValidationStatuses(initialStatuses);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+  
     useEffect(() => {
       fetchPokemen();
     }, [refreshTrigger]);
-
+  
     const refreshData = () => {
-        setRefreshTrigger((prev) => !prev); // Toggle the trigger
+      setRefreshTrigger((prev) => !prev); // Toggle the trigger
     };
-    
+  
+    useEffect(() => {
+      // Function to validate each Pokémon
+      const validatePokemen = () => {
+        const newStatuses: { [key: string]: boolean } = { ...validationStatuses };
+        pokemen.forEach((poke) => {
+          const isValid = inTargetTime(poke.xp, poke.startDate, poke.timesPer, poke.period);
+          newStatuses[poke.name] = !isValid;
+        });
+        setValidationStatuses(newStatuses); // Update validation statuses
+      };
+  
+      // Set an interval to call `validatePokemen` every second
+      const intervalId = setInterval(validatePokemen, 1000);
+  
+      // Cleanup interval when the component unmounts
+      return () => clearInterval(intervalId);
+    }, [pokemen, validationStatuses]); // Re-run if pokemen or statuses change
+  
     return (
       <ParallaxScrollView
         headerBackgroundColor={{ light: "#D0D0D0", dark: "#353636" }}
@@ -72,25 +97,36 @@
               onPress={() => navigation.navigate("Pokemon Details", { pokemon: poke })}
               underlayColor="#ddd"
             >
-            <View style={styles.outerCard}>
+              <View style={styles.outerCard}>
                 <View style={styles.pokemonCard}>
-                    <PokeHabit
+                  <PokeHabit
                     imgPath={pokemonToImageMap[poke.pokemon]}
                     info={{
-                        name: poke.name,
-                        xp: poke.xp,
-                        habit: poke.habit,
-                        pokemon: poke.pokemon,
-                        startDate: poke.startDate,
-                        timesPer: poke.timesPer,
-                        period: poke.period
+                      name: poke.name,
+                      xp: poke.xp,
+                      habit: poke.habit,
+                      pokemon: poke.pokemon,
+                      startDate: poke.startDate,
+                      timesPer: poke.timesPer,
+                      period: poke.period,
                     }}
-                    />
-                    <PostRequestUpdate buttonText="TRACK!" onPostSuccess={refreshData}
-                        param={{'name': poke.name, 'xp': poke.xp, 'pokemon': poke.pokemon, 'habit': poke.habit, 'startDate': poke.startDate, 'timesPer': poke.timesPer, 'period': poke.period}} />
+                  />
+                  <PostRequestUpdate
+                    buttonText="TRACK!"
+                    onPostSuccess={refreshData}
+                    param={{
+                      name: poke.name,
+                      xp: poke.xp,
+                      pokemon: poke.pokemon,
+                      habit: poke.habit,
+                      startDate: poke.startDate,
+                      timesPer: poke.timesPer,
+                      period: poke.period,
+                    }}
+                  />
                 </View>
-                <View style={inTargetTime(poke.startDate, poke.timesPer, poke.period) ? styles.valid : styles.invalid}>
-                </View>
+                {/* Display valid/invalid based on validationStatuses */}
+                <View style={!validationStatuses[poke.name] ? styles.valid : styles.invalid}></View>
               </View>
             </TouchableHighlight>
           ))}
@@ -98,7 +134,7 @@
         </View>
       </ParallaxScrollView>
     );
-  }
+  }  
   
   // details screen displaying more information about habit
   function PokemonDetailsScreen({ route }: { route: any }) {
@@ -226,6 +262,6 @@
   };
 
   const periodToTimeMap: { [key: string]: number } = {
-    Day: 24 * 60 * 60 * 100,
-    Week: 7 * 24 * 60 * 60 * 100
+    Day: 24 * 60 * 60 * 1000,
+    Week: 7 * 24 * 60 * 60 * 1000
   }
