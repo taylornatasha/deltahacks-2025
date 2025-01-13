@@ -99,7 +99,7 @@ import { pokemens } from '@/constants/PokemenCatalog';
       };
   
       // Set an interval to call `validatePokemen` every second
-      const intervalId = setInterval(validatePokemen, 1000);
+      const intervalId = setInterval(validatePokemen, 100);
   
       // Cleanup interval when the component unmounts
       return () => clearInterval(intervalId);

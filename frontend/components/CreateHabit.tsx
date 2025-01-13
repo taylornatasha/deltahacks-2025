@@ -4,7 +4,7 @@ import { Picker } from '@react-native-picker/picker';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Habit } from '../types/habit';
-import { PostRequestOverwrite } from './PostRequestComponent';
+import { PostRequestOverwrite, PostRequestOverwriteBattle } from './PostRequestComponent';
 import { pokemens } from '@/constants/PokemenCatalog';
 import { PokeData } from '@/types/poke';
 import { User } from '@/types/userdata'
@@ -259,20 +259,21 @@ export const CreateGroupHabit : React.FC<CreateHabitProps> = (param: CreateHabit
                                     value={nickname}
                                     onChangeText={setNickname}
                                 />
-                                <PostRequestOverwrite 
+                                <PostRequestOverwriteBattle 
                                     onPostSuccess={refreshAndToggleVisibility} 
-                                    buttonText="START TRACKING"
-                                    user={param.user}
+                                    buttonText="START BATTLE"
                                     param={{
-                                        'name': nickname, 
-                                        'xp': 0, 
-                                        'pokemon': pkmnName, 
-                                        'habit': habitDesc,
-                                        'startDate' : (new Date).toISOString(),
-                                        'timesPer': parseInt(timesPer),
-                                        'period': period,
-                                        'lastDoneTime': ""
-                                    }} 
+                                        id: Math.floor(Math.random() * 100),
+                                        p1: 0,
+                                        p2: 1,
+                                        p1PkmnName: nickname,
+                                        p1PkmnType: pkmnName,
+                                        p2PkmnName: 'Jimbo',
+                                        p2PkmnType: 'Nicholasmon',
+                                        p1Health: 10,
+                                        p2Health: 10,
+                                        startDate: (new Date).toISOString()
+                                    }}
                                 />
                                 {/* <Confetti count={50}/> */}
                             </ThemedView>

@@ -11,6 +11,7 @@ import { User } from '@/types/userdata'
 import { Battle } from '@/types/battle';
 import { PyPokeType } from '@/types/poke';
 import { useAppContext } from '@/app/context/AppContext';
+import { CreateGroupHabit } from './CreateHabit';
 //import Confetti from 'react-native-simple-confetti';
 
 type CreateBattleProps = {
@@ -28,9 +29,6 @@ export const CreateBattle : React.FC<CreateBattleProps> = (param: CreateBattlePr
     }
 
     const { uid, setUid, clearUid } = useAppContext();
-        const [battle, setBattle] = useState<Battle[]>([]);
-        const [refreshTrigger, setRefreshTrigger] = useState(false);
-        const [validationStatuses, setValidationStatuses] = useState<{ [key: string]: boolean }>({});
       
         const calculateRemainingDones = (pkmn: PyPokeType) => {
           return pkmn.timesPer - (pkmn.xp % (pkmn.timesPer + 1));
@@ -64,19 +62,7 @@ export const CreateBattle : React.FC<CreateBattleProps> = (param: CreateBattlePr
                 <ThemedView style={styles.hatchModal}>
                 <ThemedView style={styles.innerContainer}>
                     <ThemedText style={styles.hatchTitle}>Start Battle</ThemedText>
-                    <PostRequestOverwriteBattle 
-                        onPostSuccess={refreshAndToggleVisibility} 
-                        buttonText="SEND BATTLE REQUEST"
-                        param={{
-                            id: 1,
-                            p1: 0,
-                            p2: 1,
-                            p1PkmnName: 'joe',
-                            p2PkmnName: 'bob',
-                            p1Health: 10,
-                            p2Health: 10,
-                            startDate: (new Date).toISOString()
-                        }} />
+                    <CreateGroupHabit onPostSuccess={refreshAndToggleVisibility} user={{uid: uid}} />
                 </ThemedView>
                 </ThemedView>
             </Modal>

@@ -116,13 +116,33 @@ function BattleDetailScreen({ route }: { route: any }) {
     const { battle } = route.params;
   
     return (
+        <View style={{height: "100%", backgroundColor: "#151718", justifyContent: "center"}}>
       <ThemedView style={styles.detailsContainer}>
         <ThemedText type="title">Battle Details</ThemedText>
         <ThemedText>{`Battle ID: ${battle.id}`}</ThemedText>
-        <ThemedText>{`Player 1 Pokémon: ${battle.p1PkmnName} (Health: ${battle.p1Health})`}</ThemedText>
-        <ThemedText>{`Player 2 Pokémon: ${battle.p2PkmnName} (Health: ${battle.p2Health})`}</ThemedText>
+        <View style={styles.pictureBox}>
+            <Image source={pokemonToImageMap[battle.p1PkmnType]} style={styles.picture}></Image>
+            <Image source={pokemonToImageMap[battle.p2PkmnType]} style={styles.picture}></Image>
+        </View>
+        <View style={styles.infoBox}>
+            <ThemedText type="defaultSemiBold" style={{textAlign: "center", margin: 20}}>
+                Player 1
+                <br />
+                {battle.p1PkmnName}
+                <br />
+                Health: {battle.p1Health}
+            </ThemedText>
+            <ThemedText type="defaultSemiBold" style={{textAlign: "center", margin: 20}}>
+                Player 2
+                <br />
+                {battle.p1PkmnName}
+                <br />
+                Health: {battle.p1Health}
+            </ThemedText>
+        </View>
         <ThemedText>{`Start Date: ${(new Date(battle.startDate)).toDateString()}`}</ThemedText>
       </ThemedView>
+      </View>
     );
   }
   
@@ -188,12 +208,14 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     position: "relative",
     padding: 8,
+    margin: 10
   },
   detailsContainer: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 16
+    padding: 16,
+    position: "relative",
+    height: "50%"
   },
   title: {
     fontSize: 24,
@@ -205,11 +227,12 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "#444444",
     borderRadius: 8,
-    paddingBottom: 8,
+    padding: 8,
     justifyContent: "space-between",
     flex: 1,
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
+    paddingHorizontal: 30
   },
   leftContainer: {
     flex: 1,
@@ -266,6 +289,26 @@ const styles = StyleSheet.create({
     borderColor: '#444444',
     overflow: "hidden",
   },
+  picture: {
+    height: 100,
+    width: 100,
+    marginTop: 50,
+    margin: 60
+  },
+  pictureBox: {
+    flex: 1,
+    flexDirection: "row",
+    position: "relative",
+    width: "30%",
+    justifyContent: "space-around"
+  },
+  infoBox: {
+    flex: 1,
+    flexDirection: "row",
+    position: "relative",
+    width: "100%",
+    justifyContent: "space-around"
+  }
 
 });
 
@@ -273,7 +316,10 @@ const pokemonToImageMap: { [key: string]: ImageSourcePropType } = {
   Nicholasmon: require("@/assets/images/pkmn_santa.png"),
   Deermon: require("@/assets/images/pkmn_reindeer.png"),
   Jinglemon: require("@/assets/images/pkmn_elf.png"),
-
+  Reddymon: require("@/assets/images/pkmn_red.png"),
+  Blooboomon: require("@/assets/images/pkmn_blue.png"),
+  Sunnymon: require("@/assets/images/pkmn_yellow.png"),
+  Treasurasaurus: require("@/assets/images/pkmn_treasure.png")
 };
 
 const periodToTimeMap: { [key: string]: number } = {
